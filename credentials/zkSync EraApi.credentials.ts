@@ -1,4 +1,7 @@
-import { ICredentialType, INodeProperties } from 'n8n-workflow';
+import {
+	ICredentialType,
+	INodeProperties,
+} from 'n8n-workflow';
 
 export class zkSyncEraApi implements ICredentialType {
 	name = 'zkSyncEraApi';
@@ -6,8 +9,8 @@ export class zkSyncEraApi implements ICredentialType {
 	documentationUrl = 'https://era.zksync.io/docs/';
 	properties: INodeProperties[] = [
 		{
-			displayName: 'Network',
-			name: 'network',
+			displayName: 'Environment',
+			name: 'environment',
 			type: 'options',
 			options: [
 				{
@@ -15,7 +18,7 @@ export class zkSyncEraApi implements ICredentialType {
 					value: 'mainnet',
 				},
 				{
-					name: 'Testnet',
+					name: 'Sepolia Testnet',
 					value: 'testnet',
 				},
 				{
@@ -25,19 +28,22 @@ export class zkSyncEraApi implements ICredentialType {
 			],
 			default: 'mainnet',
 			required: true,
+			description: 'The zkSync Era network environment',
 		},
 		{
-			displayName: 'Custom RPC URL',
-			name: 'customRpcUrl',
+			displayName: 'RPC URL',
+			name: 'rpcUrl',
 			type: 'string',
-			default: '',
-			placeholder: 'https://your-custom-rpc-endpoint.com',
+			default: 'https://mainnet.era.zksync.io',
+			required: true,
 			displayOptions: {
 				show: {
-					network: ['custom'],
+					environment: [
+						'custom',
+					],
 				},
 			},
-			required: true,
+			description: 'Custom RPC endpoint URL',
 		},
 		{
 			displayName: 'Private Key',
@@ -47,16 +53,24 @@ export class zkSyncEraApi implements ICredentialType {
 				password: true,
 			},
 			default: '',
-			placeholder: '0x...',
-			description: 'Private key for transaction signing (optional, only needed for write operations)',
+			description: 'Private key for transaction signing (required for write operations)',
 		},
 		{
-			displayName: 'Wallet Address',
-			name: 'walletAddress',
+			displayName: 'API Key',
+			name: 'apiKey',
 			type: 'string',
+			typeOptions: {
+				password: true,
+			},
 			default: '',
-			placeholder: '0x...',
-			description: 'Associated wallet address (optional)',
+			description: 'API key for provider services (optional, for rate limiting)',
+		},
+		{
+			displayName: 'Request Timeout',
+			name: 'timeout',
+			type: 'number',
+			default: 30000,
+			description: 'Request timeout in milliseconds',
 		},
 	];
 }
