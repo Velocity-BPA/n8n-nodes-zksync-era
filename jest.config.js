@@ -18,7 +18,7 @@ module.exports = {
   moduleFileExtensions: ['ts', 'js', 'json'],
   roots: ['<rootDir>'],
   transform: {
-    '^.+\\.ts$': 'ts-jest',
+    '^.+\.ts$': 'ts-jest',
   },
   testTimeout: 30000,
 };
