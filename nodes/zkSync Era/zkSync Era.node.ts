@@ -49,6 +49,14 @@ export class zkSyncEra implements INodeType {
         noDataExpression: true,
         options: [
           {
+            name: 'Accounts',
+            value: 'accounts',
+          },
+          {
+            name: 'Transactions',
+            value: 'transactions',
+          },
+          {
             name: 'Blocks',
             value: 'blocks',
           },
@@ -57,33 +65,113 @@ export class zkSyncEra implements INodeType {
             value: 'unknown',
           },
           {
-            name: 'Accounts',
-            value: 'accounts',
+            name: 'Paymasters',
+            value: 'paymasters',
+          },
+          {
+            name: 'Proofs',
+            value: 'proofs',
           },
           {
             name: 'Contracts',
             value: 'contracts',
           },
           {
-            name: 'Logs',
-            value: 'logs',
-          },
-          {
-            name: 'Network',
-            value: 'network',
-          },
-          {
-            name: 'Bridging',
-            value: 'bridging',
-          },
-          {
-            name: 'Proofs',
-            value: 'proofs',
+            name: 'Tokens',
+            value: 'tokens',
           }
         ],
-        default: 'blocks',
+        default: 'accounts',
       },
       // Operation dropdowns per resource
+{
+  displayName: 'Operation',
+  name: 'operation',
+  type: 'options',
+  noDataExpression: true,
+  displayOptions: {
+    show: {
+      resource: ['accounts'],
+    },
+  },
+  options: [
+    {
+      name: 'Get Account Balance',
+      value: 'getBalance',
+      description: 'Get account balance for the specified address',
+      action: 'Get account balance',
+    },
+    {
+      name: 'Get Account Details',
+      value: 'getAccountDetails',
+      description: 'Get account details including nonce and verification',
+      action: 'Get account details',
+    },
+    {
+      name: 'Get Transaction Count',
+      value: 'getTransactionCount',
+      description: 'Get account nonce (transaction count)',
+      action: 'Get transaction count',
+    },
+    {
+      name: 'Get All Account Balances',
+      value: 'getAllAccountBalances',
+      description: 'Get all token balances for the specified account',
+      action: 'Get all account balances',
+    },
+  ],
+  default: 'getBalance',
+},
+{
+  displayName: 'Operation',
+  name: 'operation',
+  type: 'options',
+  noDataExpression: true,
+  displayOptions: {
+    show: {
+      resource: ['transactions'],
+    },
+  },
+  options: [
+    {
+      name: 'Send Raw Transaction',
+      value: 'sendRawTransaction',
+      description: 'Send a signed transaction to the network',
+      action: 'Send raw transaction',
+    },
+    {
+      name: 'Get Transaction by Hash',
+      value: 'getTransactionByHash',
+      description: 'Retrieve transaction details by hash',
+      action: 'Get transaction by hash',
+    },
+    {
+      name: 'Get Transaction Receipt',
+      value: 'getTransactionReceipt',
+      description: 'Get transaction receipt by hash',
+      action: 'Get transaction receipt',
+    },
+    {
+      name: 'Estimate Fee',
+      value: 'estimateFee',
+      description: 'Estimate transaction fee using zks_estimateFee',
+      action: 'Estimate fee',
+    },
+    {
+      name: 'Estimate Gas L1 to L2',
+      value: 'estimateGasL1ToL2',
+      description: 'Estimate gas cost for L1 to L2 transaction',
+      action: 'Estimate gas L1 to L2',
+    },
+    {
+      name: 'Call Contract',
+      value: 'call',
+      description: 'Execute a read-only contract call',
+      action: 'Call contract',
+    },
+  ],
+  default: 'sendRawTransaction',
+},
 {
   displayName: 'Operation',
   name: 'operation',
@@ -108,15 +196,21 @@ export class zkSyncEra implements INodeType {
       action: 'Get block by hash',
     },
     {
-      name: 'Get Latest Block Number',
-      value: 'getLatestBlockNumber',
-      description: 'Get the latest block number',
-      action: 'Get latest block number',
+      name: 'Get L1 Batch Number',
+      value: 'getL1BatchNumber',
+      description: 'Get the latest L1 batch number',
+      action: 'Get L1 batch number',
     },
     {
-      name: 'Get zkSync Block Details',
-      value: 'getZkSyncBlockDetails',
-      description: 'Get zkSync-specific block details',
+      name: 'Get L1 Batch Details',
+      value: 'getL1BatchDetails',
+      description: 'Get L1 batch details by batch number',
+      action: 'Get L1 batch details',
+    },
+    {
+      name: 'Get Block Details',
+      value: 'getBlockDetails',
+      description: 'Get zkSync block details by block number',
       action: 'Get zkSync block details',
     },
   ],
@@ -129,188 +223,30 @@ export class zkSyncEra implements INodeType {
   noDataExpression: true,
   displayOptions: {
     show: {
-      resource: ['accounts'],
+      resource: ['paymasters'],
     },
   },
   options: [
     {
-      name: 'Get ETH Balance',
-      value: 'getEthBalance',
-      description: 'Get ETH balance of an account',
-      action: 'Get ETH balance',
-    },
-    {
-      name: 'Get Contract Code',
-      value: 'getCode',
-      description: 'Get contract code at an address',
-      action: 'Get contract code',
-    },
-    {
-      name: 'Get Storage Value',
-      value: 'getStorageAt',
-      description: 'Get storage value at a specific position',
-      action: 'Get storage value',
-    },
-    {
-      name: 'Get Token Balance',
-      value: 'getTokenBalance',
-      description: 'Get token balance using zkSync-specific method',
-      action: 'Get token balance',
-    },
-  ],
-  default: 'getEthBalance',
-},
-{
-  displayName: 'Operation',
-  name: 'operation',
-  type: 'options',
-  noDataExpression: true,
-  displayOptions: {
-    show: {
-      resource: ['contracts'],
-    },
-  },
-  options: [
-    {
-      name: 'Execute Contract Call',
-      value: 'ethCall',
-      description: 'Execute a contract call',
-      action: 'Execute contract call',
-    },
-    {
-      name: 'Estimate Gas',
-      value: 'estimateGas',
-      description: 'Estimate gas for transaction',
-      action: 'Estimate gas for transaction',
-    },
-    {
-      name: 'Estimate zkSync Fee',
+      name: 'Estimate Fee with Paymaster',
       value: 'estimateFee',
-      description: 'Estimate zkSync fee for transaction',
-      action: 'Estimate zkSync fee',
+      description: 'Estimate transaction fee using paymaster for gasless transactions',
+      action: 'Estimate fee with paymaster',
     },
     {
-      name: 'Get All Account Balances',
-      value: 'getAllAccountBalances',
-      description: 'Get all token balances for an account',
-      action: 'Get all account balances',
+      name: 'Send Paymaster Transaction',
+      value: 'sendTransaction',
+      description: 'Send a signed transaction using paymaster',
+      action: 'Send paymaster transaction',
+    },
+    {
+      name: 'Get Token Price',
+      value: 'getTokenPrice',
+      description: 'Get token price for paymaster calculations',
+      action: 'Get token price for paymaster',
     },
   ],
-  default: 'ethCall',
-},
-{
-  displayName: 'Operation',
-  name: 'operation',
-  type: 'options',
-  noDataExpression: true,
-  displayOptions: {
-    show: {
-      resource: ['logs'],
-    },
-  },
-  options: [
-    {
-      name: 'Get Logs',
-      value: 'getLogs',
-      description: 'Get filtered event logs',
-      action: 'Get filtered event logs',
-    },
-    {
-      name: 'Create Filter',
-      value: 'createFilter',
-      description: 'Create a new log filter',
-      action: 'Create log filter',
-    },
-    {
-      name: 'Get Filter Changes',
-      value: 'getFilterChanges',
-      description: 'Get changes for an existing filter',
-      action: 'Get filter changes',
-    },
-    {
-      name: 'Remove Filter',
-      value: 'removeFilter',
-      description: 'Remove an existing filter',
-      action: 'Remove filter',
-    },
-  ],
-  default: 'getLogs',
-},
-{
-  displayName: 'Operation',
-  name: 'operation',
-  type: 'options',
-  noDataExpression: true,
-  displayOptions: {
-    show: {
-      resource: ['network'],
-    },
-  },
-  options: [
-    {
-      name: 'Get Chain ID',
-      value: 'getChainId',
-      description: 'Get the chain ID of the network',
-      action: 'Get chain ID',
-    },
-    {
-      name: 'Get Gas Price',
-      value: 'getGasPrice',
-      description: 'Get the current gas price',
-      action: 'Get gas price',
-    },
-    {
-      name: 'Get Network Version',
-      value: 'getNetworkVersion',
-      description: 'Get the network version',
-      action: 'Get network version',
-    },
-    {
-      name: 'Get Main Contract',
-      value: 'getMainContract',
-      description: 'Get the main contract address',
-      action: 'Get main contract address',
-    },
-  ],
-  default: 'getChainId',
-},
-{
-  displayName: 'Operation',
-  name: 'operation',
-  type: 'options',
-  noDataExpression: true,
-  displayOptions: {
-    show: {
-      resource: ['bridging'],
-    },
-  },
-  options: [
-    {
-      name: 'Get L1 Batch Number',
-      value: 'getL1BatchNumber',
-      description: 'Get the current L1 batch number',
-      action: 'Get L1 batch number',
-    },
-    {
-      name: 'Get L1 Batch Details',
-      value: 'getL1BatchDetails',
-      description: 'Get details of a specific L1 batch',
-      action: 'Get L1 batch details',
-    },
-    {
-      name: 'Get Bridgehub Contract',
-      value: 'getBridgehubContract',
-      description: 'Get the bridgehub contract address',
-      action: 'Get bridgehub contract',
-    },
-    {
-      name: 'Get Base Token L1 Address',
-      value: 'getBaseTokenL1Address',
-      description: 'Get the base token L1 address',
-      action: 'Get base token L1 address',
-    },
-  ],
-  default: 'getL1BatchNumber',
+  default: 'estimateFee',
 },
 {
   displayName: 'Operation',
@@ -324,27 +260,187 @@ export class zkSyncEra implements INodeType {
   },
   options: [
     {
-      name: 'Get Merkle Proof',
+      name: 'Get Proof',
       value: 'getProof',
-      description: 'Get Merkle proof for account and storage keys',
-      action: 'Get Merkle proof',
+      description: 'Get Merkle proof for account/storage',
+      action: 'Get Merkle proof for account or storage',
     },
     {
-      name: 'Get Bytecode By Hash',
-      value: 'getBytecodeByHash',
-      description: 'Get contract bytecode by bytecode hash',
-      action: 'Get contract bytecode',
+      name: 'Get L1 Batch Details',
+      value: 'getL1BatchDetails',
+      description: 'Get batch with proof details',
+      action: 'Get L1 batch details with proof',
     },
     {
-      name: 'Get L2 To L1 Message Proof',
-      value: 'getL2ToL1MsgProof',
-      description: 'Get proof for L2 to L1 message',
-      action: 'Get L2 to L1 message proof',
+      name: 'Get L2 To L1 Log Proof',
+      value: 'getL2ToL1LogProof',
+      description: 'Get log proof for withdrawals',
+      action: 'Get L2 to L1 log proof for withdrawals',
     },
   ],
   default: 'getProof',
 },
+{
+  displayName: 'Operation',
+  name: 'operation',
+  type: 'options',
+  noDataExpression: true,
+  displayOptions: {
+    show: {
+      resource: ['contracts'],
+    },
+  },
+  options: [
+    {
+      name: 'Call Contract Function',
+      value: 'callFunction',
+      description: 'Call a contract function using eth_call',
+      action: 'Call contract function',
+    },
+    {
+      name: 'Get Contract Details',
+      value: 'getDetails',
+      description: 'Get contract deployment details',
+      action: 'Get contract details',
+    },
+    {
+      name: 'Get Contract Code',
+      value: 'getCode',
+      description: 'Get contract bytecode',
+      action: 'Get contract code',
+    },
+    {
+      name: 'Get Bytecode by Hash',
+      value: 'getBytecodeByHash',
+      description: 'Get bytecode by hash',
+      action: 'Get bytecode by hash',
+    },
+  ],
+  default: 'callFunction',
+},
+{
+  displayName: 'Operation',
+  name: 'operation',
+  type: 'options',
+  noDataExpression: true,
+  displayOptions: {
+    show: {
+      resource: ['tokens'],
+    },
+  },
+  options: [
+    {
+      name: 'Get All Account Balances',
+      value: 'getAllAccountBalances',
+      description: 'Get all token balances for an account',
+      action: 'Get all account balances',
+    },
+    {
+      name: 'Get Token Price',
+      value: 'getTokenPrice',
+      description: 'Get the current price of a token',
+      action: 'Get token price',
+    },
+    {
+      name: 'Get Confirmed Tokens',
+      value: 'getConfirmedTokens',
+      description: 'Get list of confirmed tokens',
+      action: 'Get confirmed tokens',
+    },
+    {
+      name: 'Call Token Contract',
+      value: 'callTokenContract',
+      description: 'Call token contract methods',
+      action: 'Call token contract',
+    },
+  ],
+  default: 'getAllAccountBalances',
+},
       // Parameter definitions
+{
+  displayName: 'Address',
+  name: 'address',
+  type: 'string',
+  required: true,
+  displayOptions: {
+    show: {
+      resource: ['accounts'],
+      operation: ['getBalance', 'getAccountDetails', 'getTransactionCount', 'getAllAccountBalances'],
+    },
+  },
+  default: '',
+  description: 'The account address (must be a valid hex address)',
+  placeholder: '0x1234567890123456789012345678901234567890',
+},
+{
+  displayName: 'Block Number',
+  name: 'blockNumber',
+  type: 'string',
+  displayOptions: {
+    show: {
+      resource: ['accounts'],
+      operation: ['getBalance', 'getAccountDetails', 'getTransactionCount'],
+    },
+  },
+  default: 'latest',
+  description: 'The block number (hex string), or "latest", "earliest", "pending"',
+  placeholder: 'latest',
+},
+{
+  displayName: 'Signed Transaction',
+  name: 'signedTransaction',
+  type: 'string',
+  required: true,
+  displayOptions: {
+    show: {
+      resource: ['transactions'],
+      operation: ['sendRawTransaction'],
+    },
+  },
+  default: '',
+  description: 'The signed transaction data in hex format',
+},
+{
+  displayName: 'Transaction Hash',
+  name: 'transactionHash',
+  type: 'string',
+  required: true,
+  displayOptions: {
+    show: {
+      resource: ['transactions'],
+      operation: ['getTransactionByHash', 'getTransactionReceipt'],
+    },
+  },
+  default: '',
+  description: 'The transaction hash to query',
+},
+{
+  displayName: 'Transaction Object',
+  name: 'transaction',
+  type: 'json',
+  required: true,
+  displayOptions: {
+    show: {
+      resource: ['transactions'],
+      operation: ['estimateFee', 'estimateGasL1ToL2', 'call'],
+    },
+  },
+  default: '{}',
+  description: 'Transaction object with fields like from, to, data, value, etc.',
+},
+{
+  displayName: 'Block Number',
+  name: 'blockNumber',
+  type: 'string',
+  displayOptions: {
+    show: {
+      resource: ['transactions'],
+      operation: ['call'],
+    },
+  },
+  default: 'latest',
+  description: 'Block number for the call (latest, earliest, pending, or hex block number)',
+},
 {
   displayName: 'Block Number',
   name: 'blockNumber',
@@ -353,25 +449,25 @@ export class zkSyncEra implements INodeType {
   displayOptions: {
     show: {
       resource: ['blocks'],
-      operation: ['getBlockByNumber', 'getZkSyncBlockDetails'],
+      operation: ['getBlockByNumber'],
     },
   },
   default: 'latest',
-  description: 'The block number to retrieve (can be hex number, decimal number, or "latest", "earliest", "pending")',
-  placeholder: 'latest',
+  description: 'Block number in hex format (0x...) or "latest", "earliest", "pending"',
 },
 {
   displayName: 'Include Transactions',
   name: 'includeTransactions',
   type: 'boolean',
+  required: false,
   displayOptions: {
     show: {
       resource: ['blocks'],
-      operation: ['getBlockByNumber', 'getBlockByHash'],
+      operation: ['getBlockByNumber'],
     },
   },
   default: false,
-  description: 'Whether to include full transaction objects in the block data',
+  description: 'Whether to include full transaction objects or just transaction hashes',
 },
 {
   displayName: 'Block Hash',
@@ -385,280 +481,21 @@ export class zkSyncEra implements INodeType {
     },
   },
   default: '',
-  description: 'The block hash to retrieve',
-  placeholder: '0x...',
+  description: 'Block hash in hex format (0x...)',
 },
 {
-  displayName: 'Address',
-  name: 'address',
-  type: 'string',
-  required: true,
-  displayOptions: {
-    show: {
-      resource: ['accounts'],
-      operation: ['getEthBalance', 'getCode', 'getStorageAt', 'getTokenBalance'],
-    },
-  },
-  default: '',
-  description: 'The account or contract address',
-  placeholder: '0x742d35cc6634c0532925a3b8d431d3c30895ce0',
-},
-{
-  displayName: 'Block Tag',
-  name: 'blockTag',
-  type: 'string',
+  displayName: 'Include Transactions',
+  name: 'includeTransactions',
+  type: 'boolean',
   required: false,
   displayOptions: {
     show: {
-      resource: ['accounts'],
-      operation: ['getEthBalance', 'getCode', 'getStorageAt', 'getTokenBalance'],
+      resource: ['blocks'],
+      operation: ['getBlockByHash'],
     },
   },
-  default: 'latest',
-  description: 'Block tag (latest, earliest, pending, or block number in hex)',
-  placeholder: 'latest',
-},
-{
-  displayName: 'Storage Position',
-  name: 'position',
-  type: 'string',
-  required: true,
-  displayOptions: {
-    show: {
-      resource: ['accounts'],
-      operation: ['getStorageAt'],
-    },
-  },
-  default: '',
-  description: 'Storage position (hex encoded)',
-  placeholder: '0x0',
-},
-{
-  displayName: 'Token Address',
-  name: 'tokenAddress',
-  type: 'string',
-  required: true,
-  displayOptions: {
-    show: {
-      resource: ['accounts'],
-      operation: ['getTokenBalance'],
-    },
-  },
-  default: '',
-  description: 'Token contract address',
-  placeholder: '0x5AEa5775959fBC2557Cc8789bC1bf90A239D9a91',
-},
-{
-  displayName: 'Contract Address',
-  name: 'to',
-  type: 'string',
-  required: true,
-  displayOptions: {
-    show: {
-      resource: ['contracts'],
-      operation: ['ethCall', 'estimateGas', 'estimateFee'],
-    },
-  },
-  default: '',
-  description: 'The contract address to call',
-},
-{
-  displayName: 'Data',
-  name: 'data',
-  type: 'string',
-  required: true,
-  displayOptions: {
-    show: {
-      resource: ['contracts'],
-      operation: ['ethCall', 'estimateGas', 'estimateFee'],
-    },
-  },
-  default: '',
-  description: 'The encoded function call data',
-},
-{
-  displayName: 'From Address',
-  name: 'from',
-  type: 'string',
-  required: false,
-  displayOptions: {
-    show: {
-      resource: ['contracts'],
-      operation: ['ethCall', 'estimateGas', 'estimateFee'],
-    },
-  },
-  default: '',
-  description: 'The address the transaction is sent from',
-},
-{
-  displayName: 'Value',
-  name: 'value',
-  type: 'string',
-  required: false,
-  displayOptions: {
-    show: {
-      resource: ['contracts'],
-      operation: ['ethCall', 'estimateGas', 'estimateFee'],
-    },
-  },
-  default: '0x0',
-  description: 'The value sent with this transaction in hex',
-},
-{
-  displayName: 'Gas',
-  name: 'gas',
-  type: 'string',
-  required: false,
-  displayOptions: {
-    show: {
-      resource: ['contracts'],
-      operation: ['ethCall', 'estimateGas', 'estimateFee'],
-    },
-  },
-  default: '',
-  description: 'The gas limit in hex',
-},
-{
-  displayName: 'Gas Price',
-  name: 'gasPrice',
-  type: 'string',
-  required: false,
-  displayOptions: {
-    show: {
-      resource: ['contracts'],
-      operation: ['ethCall', 'estimateGas', 'estimateFee'],
-    },
-  },
-  default: '',
-  description: 'The gas price in hex',
-},
-{
-  displayName: 'Block Tag',
-  name: 'blockTag',
-  type: 'options',
-  displayOptions: {
-    show: {
-      resource: ['contracts'],
-      operation: ['ethCall'],
-    },
-  },
-  options: [
-    {
-      name: 'Latest',
-      value: 'latest',
-    },
-    {
-      name: 'Earliest',
-      value: 'earliest',
-    },
-    {
-      name: 'Pending',
-      value: 'pending',
-    },
-    {
-      name: 'Finalized',
-      value: 'finalized',
-    },
-    {
-      name: 'Safe',
-      value: 'safe',
-    },
-  ],
-  default: 'latest',
-  description: 'The block tag to use for the call',
-},
-{
-  displayName: 'Account Address',
-  name: 'address',
-  type: 'string',
-  required: true,
-  displayOptions: {
-    show: {
-      resource: ['contracts'],
-      operation: ['getAllAccountBalances'],
-    },
-  },
-  default: '',
-  description: 'The account address to get balances for',
-},
-{
-  displayName: 'From Block',
-  name: 'fromBlock',
-  type: 'string',
-  displayOptions: {
-    show: {
-      resource: ['logs'],
-      operation: ['getLogs', 'createFilter'],
-    },
-  },
-  default: 'latest',
-  description: 'Block number to start filtering from (hex string, "earliest", "latest", "pending")',
-},
-{
-  displayName: 'To Block',
-  name: 'toBlock',
-  type: 'string',
-  displayOptions: {
-    show: {
-      resource: ['logs'],
-      operation: ['getLogs', 'createFilter'],
-    },
-  },
-  default: 'latest',
-  description: 'Block number to filter to (hex string, "earliest", "latest", "pending")',
-},
-{
-  displayName: 'Contract Address',
-  name: 'address',
-  type: 'string',
-  displayOptions: {
-    show: {
-      resource: ['logs'],
-      operation: ['getLogs', 'createFilter'],
-    },
-  },
-  default: '',
-  description: 'Contract address to filter logs from (optional)',
-},
-{
-  displayName: 'Topics',
-  name: 'topics',
-  type: 'json',
-  displayOptions: {
-    show: {
-      resource: ['logs'],
-      operation: ['getLogs', 'createFilter'],
-    },
-  },
-  default: '[]',
-  description: 'Array of topics to filter by (JSON array)',
-},
-{
-  displayName: 'Block Hash',
-  name: 'blockHash',
-  type: 'string',
-  displayOptions: {
-    show: {
-      resource: ['logs'],
-      operation: ['getLogs', 'createFilter'],
-    },
-  },
-  default: '',
-  description: 'Block hash to filter from (optional, mutually exclusive with fromBlock/toBlock)',
-},
-{
-  displayName: 'Filter ID',
-  name: 'filterId',
-  type: 'string',
-  required: true,
-  displayOptions: {
-    show: {
-      resource: ['logs'],
-      operation: ['getFilterChanges', 'removeFilter'],
-    },
-  },
-  default: '',
-  description: 'The filter ID to query or remove',
+  default: false,
+  description: 'Whether to include full transaction objects or just transaction hashes',
 },
 {
   displayName: 'Batch Number',
@@ -667,13 +504,101 @@ export class zkSyncEra implements INodeType {
   required: true,
   displayOptions: {
     show: {
-      resource: ['bridging'],
+      resource: ['blocks'],
       operation: ['getL1BatchDetails'],
     },
   },
   default: '',
-  description: 'The L1 batch number to get details for (as hex string, e.g., 0x1a2b)',
-  placeholder: '0x1a2b',
+  description: 'L1 batch number in hex format (0x...) or decimal',
+},
+{
+  displayName: 'Block Number',
+  name: 'blockNumber',
+  type: 'string',
+  required: true,
+  displayOptions: {
+    show: {
+      resource: ['blocks'],
+      operation: ['getBlockDetails'],
+    },
+  },
+  default: '',
+  description: 'Block number in hex format (0x...) or decimal',
+},
+{
+  displayName: 'Transaction Object',
+  name: 'transaction',
+  type: 'json',
+  required: true,
+  displayOptions: {
+    show: {
+      resource: ['paymasters'],
+      operation: ['estimateFee'],
+    },
+  },
+  default: '{}',
+  description: 'Transaction object to estimate fee for',
+  placeholder: '{"to": "0x...", "data": "0x...", "value": "0x0"}',
+},
+{
+  displayName: 'Paymaster Address',
+  name: 'paymasterAddress',
+  type: 'string',
+  required: false,
+  displayOptions: {
+    show: {
+      resource: ['paymasters'],
+      operation: ['estimateFee'],
+    },
+  },
+  default: '',
+  description: 'Address of the paymaster contract',
+  placeholder: '0x...',
+},
+{
+  displayName: 'Paymaster Input',
+  name: 'paymasterInput',
+  type: 'string',
+  required: false,
+  displayOptions: {
+    show: {
+      resource: ['paymasters'],
+      operation: ['estimateFee'],
+    },
+  },
+  default: '0x',
+  description: 'Input data for the paymaster',
+  placeholder: '0x...',
+},
+{
+  displayName: 'Signed Transaction',
+  name: 'signedTransaction',
+  type: 'string',
+  required: true,
+  displayOptions: {
+    show: {
+      resource: ['paymasters'],
+      operation: ['sendTransaction'],
+    },
+  },
+  default: '',
+  description: 'The signed transaction data in hex format',
+  placeholder: '0x...',
+},
+{
+  displayName: 'Token Address',
+  name: 'tokenAddress',
+  type: 'string',
+  required: true,
+  displayOptions: {
+    show: {
+      resource: ['paymasters'],
+      operation: ['getTokenPrice'],
+    },
+  },
+  default: '',
+  description: 'The token contract address to get price for',
+  placeholder: '0x...',
 },
 {
   displayName: 'Address',
@@ -688,9 +613,10 @@ export class zkSyncEra implements INodeType {
   },
   default: '',
   description: 'The account address to get proof for',
+  placeholder: '0x1234567890123456789012345678901234567890',
 },
 {
-  displayName: 'Storage Keys',
+  displayName: 'Keys',
   name: 'keys',
   type: 'string',
   required: true,
@@ -701,7 +627,8 @@ export class zkSyncEra implements INodeType {
     },
   },
   default: '',
-  description: 'Comma-separated list of storage keys in hexadecimal format',
+  description: 'Storage keys (comma-separated hex values)',
+  placeholder: '0x1,0x2,0x3',
 },
 {
   displayName: 'L1 Batch Number',
@@ -714,8 +641,121 @@ export class zkSyncEra implements INodeType {
       operation: ['getProof'],
     },
   },
+  default: 'latest',
+  description: 'L1 batch number or "latest"',
+},
+{
+  displayName: 'Batch Number',
+  name: 'batchNumber',
+  type: 'number',
+  required: true,
+  displayOptions: {
+    show: {
+      resource: ['proofs'],
+      operation: ['getL1BatchDetails'],
+    },
+  },
+  default: 0,
+  description: 'The batch number to get details for',
+},
+{
+  displayName: 'Transaction Hash',
+  name: 'txHash',
+  type: 'string',
+  required: true,
+  displayOptions: {
+    show: {
+      resource: ['proofs'],
+      operation: ['getL2ToL1LogProof'],
+    },
+  },
   default: '',
-  description: 'L1 batch number in hexadecimal format',
+  description: 'Transaction hash containing the log',
+  placeholder: '0x1234567890123456789012345678901234567890123456789012345678901234',
+},
+{
+  displayName: 'Log Index',
+  name: 'logIndex',
+  type: 'number',
+  required: false,
+  displayOptions: {
+    show: {
+      resource: ['proofs'],
+      operation: ['getL2ToL1LogProof'],
+    },
+  },
+  default: 0,
+  description: 'Index of the log in the transaction (optional)',
+},
+{
+  displayName: 'Transaction Data',
+  name: 'transaction',
+  type: 'json',
+  required: true,
+  displayOptions: {
+    show: {
+      resource: ['contracts'],
+      operation: ['callFunction'],
+    },
+  },
+  default: '{"to": "0x...", "data": "0x..."}',
+  description: 'Transaction object with to, data, from, gas, gasPrice, and value fields',
+},
+{
+  displayName: 'Block Number',
+  name: 'blockNumber',
+  type: 'string',
+  required: false,
+  displayOptions: {
+    show: {
+      resource: ['contracts'],
+      operation: ['callFunction'],
+    },
+  },
+  default: 'latest',
+  description: 'Block number to call at (latest, earliest, pending, or hex number)',
+},
+{
+  displayName: 'Contract Address',
+  name: 'contractAddress',
+  type: 'string',
+  required: true,
+  displayOptions: {
+    show: {
+      resource: ['contracts'],
+      operation: ['getDetails'],
+    },
+  },
+  default: '',
+  description: 'The contract address to get details for',
+},
+{
+  displayName: 'Contract Address',
+  name: 'address',
+  type: 'string',
+  required: true,
+  displayOptions: {
+    show: {
+      resource: ['contracts'],
+      operation: ['getCode'],
+    },
+  },
+  default: '',
+  description: 'The contract address to get code for',
+},
+{
+  displayName: 'Block Number',
+  name: 'blockNumber',
+  type: 'string',
+  required: false,
+  displayOptions: {
+    show: {
+      resource: ['contracts'],
+      operation: ['getCode'],
+    },
+  },
+  default: 'latest',
+  description: 'Block number to get code at (latest, earliest, pending, or hex number)',
 },
 {
   displayName: 'Bytecode Hash',
@@ -724,7 +764,7 @@ export class zkSyncEra implements INodeType {
   required: true,
   displayOptions: {
     show: {
-      resource: ['proofs'],
+      resource: ['contracts'],
       operation: ['getBytecodeByHash'],
     },
   },
@@ -732,60 +772,103 @@ export class zkSyncEra implements INodeType {
   description: 'The bytecode hash to retrieve',
 },
 {
+  displayName: 'Account Address',
+  name: 'address',
+  type: 'string',
+  required: true,
+  displayOptions: {
+    show: {
+      resource: ['tokens'],
+      operation: ['getAllAccountBalances'],
+    },
+  },
+  default: '',
+  description: 'The account address to get token balances for',
+  placeholder: '0x742d35Cc7F2c4C5D8C6c7C8C5c5c5c5c5c5c5c5c',
+},
+{
+  displayName: 'Token Address',
+  name: 'tokenAddress',
+  type: 'string',
+  required: true,
+  displayOptions: {
+    show: {
+      resource: ['tokens'],
+      operation: ['getTokenPrice'],
+    },
+  },
+  default: '',
+  description: 'The token contract address to get price for',
+  placeholder: '0x3355df6D4c9C3035724Fd0e3914dE96A5a83aaf4',
+},
+{
+  displayName: 'From',
+  name: 'from',
+  type: 'number',
+  displayOptions: {
+    show: {
+      resource: ['tokens'],
+      operation: ['getConfirmedTokens'],
+    },
+  },
+  default: 0,
+  description: 'Offset for pagination',
+},
+{
+  displayName: 'Limit',
+  name: 'limit',
+  type: 'number',
+  displayOptions: {
+    show: {
+      resource: ['tokens'],
+      operation: ['getConfirmedTokens'],
+    },
+  },
+  default: 100,
+  description: 'Maximum number of tokens to return',
+},
+{
+  displayName: 'To Address',
+  name: 'to',
+  type: 'string',
+  required: true,
+  displayOptions: {
+    show: {
+      resource: ['tokens'],
+      operation: ['callTokenContract'],
+    },
+  },
+  default: '',
+  description: 'The token contract address to call',
+  placeholder: '0x3355df6D4c9C3035724Fd0e3914dE96A5a83aaf4',
+},
+{
+  displayName: 'Data',
+  name: 'data',
+  type: 'string',
+  displayOptions: {
+    show: {
+      resource: ['tokens'],
+      operation: ['callTokenContract'],
+    },
+  },
+  default: '',
+  description: 'Encoded function call data (hex)',
+  placeholder: '0x70a08231000000000000000000000000742d35cc7f2c4c5d8c6c7c8c5c5c5c5c5c5c5c5c',
+},
+{
   displayName: 'Block Number',
   name: 'blockNumber',
   type: 'string',
-  required: true,
   displayOptions: {
     show: {
-      resource: ['proofs'],
-      operation: ['getL2ToL1MsgProof'],
+      resource: ['tokens'],
+      operation: ['callTokenContract'],
     },
   },
-  default: '',
-  description: 'Block number in hexadecimal format',
-},
-{
-  displayName: 'Sender',
-  name: 'sender',
-  type: 'string',
-  required: true,
-  displayOptions: {
-    show: {
-      resource: ['proofs'],
-      operation: ['getL2ToL1MsgProof'],
-    },
-  },
-  default: '',
-  description: 'The sender address of the message',
-},
-{
-  displayName: 'Message',
-  name: 'msg',
-  type: 'string',
-  required: true,
-  displayOptions: {
-    show: {
-      resource: ['proofs'],
-      operation: ['getL2ToL1MsgProof'],
-    },
-  },
-  default: '',
-  description: 'The message data in hexadecimal format',
-},
-{
-  displayName: 'L2 Transaction Number In Block',
-  name: 'l2TxNumberInBlock',
-  type: 'string',
-  required: false,
-  displayOptions: {
-    show: {
-      resource: ['proofs'],
-      operation: ['getL2ToL1MsgProof'],
-    },
-  },
-  default: '',
-  description: 'L2 transaction number in block (optional)',
+  default: 'latest',
+  description: 'Block number to execute the call at',
+  placeholder: 'latest',
 },
     ],
   };
@@ -795,22 +878,22 @@ export class zkSyncEra implements INodeType {
     const resource = this.getNodeParameter('resource', 0) as string;
 
     switch (resource) {
+      case 'accounts':
+        return [await executeAccountsOperations.call(this, items)];
+      case 'transactions':
+        return [await executeTransactionsOperations.call(this, items)];
       case 'blocks':
         return [await executeBlocksOperations.call(this, items)];
       case 'unknown':
         return [await executeunknownOperations.call(this, items)];
-      case 'accounts':
-        return [await executeAccountsOperations.call(this, items)];
-      case 'contracts':
-        return [await executeContractsOperations.call(this, items)];
-      case 'logs':
-        return [await executeLogsOperations.call(this, items)];
-      case 'network':
-        return [await executeNetworkOperations.call(this, items)];
-      case 'bridging':
-        return [await executeBridgingOperations.call(this, items)];
+      case 'paymasters':
+        return [await executePaymastersOperations.call(this, items)];
       case 'proofs':
         return [await executeProofsOperations.call(this, items)];
+      case 'contracts':
+        return [await executeContractsOperations.call(this, items)];
+      case 'tokens':
+        return [await executeTokensOperations.call(this, items)];
       default:
         throw new NodeOperationError(this.getNode(), `The resource "${resource}" is not supported`);
     }
@@ -820,6 +903,389 @@ export class zkSyncEra implements INodeType {
 // ============================================================
 // Resource Handler Functions
 // ============================================================
+
+async function executeAccountsOperations(
+  this: IExecuteFunctions,
+  items: INodeExecutionData[],
+): Promise<INodeExecutionData[]> {
+  const returnData: INodeExecutionData[] = [];
+  const operation = this.getNodeParameter('operation', 0) as string;
+  const credentials = await this.getCredentials('zksynceraApi') as any;
+
+  for (let i = 0; i < items.length; i++) {
+    try {
+      let result: any;
+      const address = this.getNodeParameter('address', i) as string;
+
+      // Validate address format
+      if (!address.match(/^0x[a-fA-F0-9]{40}$/)) {
+        throw new NodeOperationError(this.getNode(), `Invalid address format: ${address}. Address must be a 40-character hex string starting with 0x`);
+      }
+
+      switch (operation) {
+        case 'getBalance': {
+          const blockNumber = this.getNodeParameter('blockNumber', i) as string;
+          
+          const requestBody = {
+            jsonrpc: '2.0',
+            id: 1,
+            method: 'eth_getBalance',
+            params: [address, blockNumber || 'latest'],
+          };
+
+          const options: any = {
+            method: 'POST',
+            url: credentials.baseUrl,
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: requestBody,
+            json: true,
+          };
+
+          const response = await this.helpers.httpRequest(options) as any;
+          
+          if (response.error) {
+            throw new NodeApiError(this.getNode(), response.error, {
+              message: `zkSync Era API Error: ${response.error.message}`,
+            });
+          }
+
+          result = {
+            address,
+            blockNumber: blockNumber || 'latest',
+            balance: response.result,
+            balanceWei: parseInt(response.result, 16).toString(),
+            balanceEth: (parseInt(response.result, 16) / Math.pow(10, 18)).toString(),
+          };
+          break;
+        }
+
+        case 'getAccountDetails': {
+          const blockNumber = this.getNodeParameter('blockNumber', i) as string;
+          
+          const requestBody = {
+            jsonrpc: '2.0',
+            id: 1,
+            method: 'zks_getAccount',
+            params: [address, blockNumber || 'latest'],
+          };
+
+          const options: any = {
+            method: 'POST',
+            url: credentials.baseUrl,
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: requestBody,
+            json: true,
+          };
+
+          const response = await this.helpers.httpRequest(options) as any;
+          
+          if (response.error) {
+            throw new NodeApiError(this.getNode(), response.error, {
+              message: `zkSync Era API Error: ${response.error.message}`,
+            });
+          }
+
+          result = {
+            address,
+            blockNumber: blockNumber || 'latest',
+            accountDetails: response.result,
+          };
+          break;
+        }
+
+        case 'getTransactionCount': {
+          const blockNumber = this.getNodeParameter('blockNumber', i) as string;
+          
+          const requestBody = {
+            jsonrpc: '2.0',
+            id: 1,
+            method: 'eth_getTransactionCount',
+            params: [address, blockNumber || 'latest'],
+          };
+
+          const options: any = {
+            method: 'POST',
+            url: credentials.baseUrl,
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: requestBody,
+            json: true,
+          };
+
+          const response = await this.helpers.httpRequest(options) as any;
+          
+          if (response.error) {
+            throw new NodeApiError(this.getNode(), response.error, {
+              message: `zkSync Era API Error: ${response.error.message}`,
+            });
+          }
+
+          result = {
+            address,
+            blockNumber: blockNumber || 'latest',
+            nonce: response.result,
+            nonceDecimal: parseInt(response.result, 16).toString(),
+          };
+          break;
+        }
+
+        case 'getAllAccountBalances': {
+          const requestBody = {
+            jsonrpc: '2.0',
+            id: 1,
+            method: 'zks_getAllAccountBalances',
+            params: [address],
+          };
+
+          const options: any = {
+            method: 'POST',
+            url: credentials.baseUrl,
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: requestBody,
+            json: true,
+          };
+
+          const response = await this.helpers.httpRequest(options) as any;
+          
+          if (response.error) {
+            throw new NodeApiError(this.getNode(), response.error, {
+              message: `zkSync Era API Error: ${response.error.message}`,
+            });
+          }
+
+          result = {
+            address,
+            balances: response.result,
+            tokenCount: Object.keys(response.result || {}).length,
+          };
+          break;
+        }
+
+        default:
+          throw new NodeOperationError(this.getNode(), `Unknown operation: ${operation}`);
+      }
+
+      returnData.push({ 
+        json: result, 
+        pairedItem: { item: i } 
+      });
+
+    } catch (error: any) {
+      if (this.continueOnFail()) {
+        returnData.push({ 
+          json: { error: error.message || 'Unknown error occurred' }, 
+          pairedItem: { item: i } 
+        });
+      } else {
+        throw error;
+      }
+    }
+  }
+
+  return returnData;
+}
+
+async function executeTransactionsOperations(
+  this: IExecuteFunctions,
+  items: INodeExecutionData[],
+): Promise<INodeExecutionData[]> {
+  const returnData: INodeExecutionData[] = [];
+  const operation = this.getNodeParameter('operation', 0) as string;
+  const credentials = await this.getCredentials('zksynceraApi') as any;
+
+  for (let i = 0; i < items.length; i++) {
+    try {
+      let result: any;
+      
+      switch (operation) {
+        case 'sendRawTransaction': {
+          const signedTransaction = this.getNodeParameter('signedTransaction', i) as string;
+          
+          const requestBody = {
+            jsonrpc: '2.0',
+            method: 'eth_sendRawTransaction',
+            params: [signedTransaction],
+            id: Date.now(),
+          };
+
+          const options: any = {
+            method: 'POST',
+            url: credentials.baseUrl,
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(requestBody),
+            json: false,
+          };
+          
+          const response = await this.helpers.httpRequest(options) as any;
+          result = JSON.parse(response);
+          break;
+        }
+
+        case 'getTransactionByHash': {
+          const transactionHash = this.getNodeParameter('transactionHash', i) as string;
+          
+          const requestBody = {
+            jsonrpc: '2.0',
+            method: 'eth_getTransactionByHash',
+            params: [transactionHash],
+            id: Date.now(),
+          };
+
+          const options: any = {
+            method: 'POST',
+            url: credentials.baseUrl,
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(requestBody),
+            json: false,
+          };
+          
+          const response = await this.helpers.httpRequest(options) as any;
+          result = JSON.parse(response);
+          break;
+        }
+
+        case 'getTransactionReceipt': {
+          const transactionHash = this.getNodeParameter('transactionHash', i) as string;
+          
+          const requestBody = {
+            jsonrpc: '2.0',
+            method: 'eth_getTransactionReceipt',
+            params: [transactionHash],
+            id: Date.now(),
+          };
+
+          const options: any = {
+            method: 'POST',
+            url: credentials.baseUrl,
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(requestBody),
+            json: false,
+          };
+          
+          const response = await this.helpers.httpRequest(options) as any;
+          result = JSON.parse(response);
+          break;
+        }
+
+        case 'estimateFee': {
+          const transaction = this.getNodeParameter('transaction', i) as any;
+          
+          const requestBody = {
+            jsonrpc: '2.0',
+            method: 'zks_estimateFee',
+            params: [transaction],
+            id: Date.now(),
+          };
+
+          const options: any = {
+            method: 'POST',
+            url: credentials.baseUrl,
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(requestBody),
+            json: false,
+          };
+          
+          const response = await this.helpers.httpRequest(options) as any;
+          result = JSON.parse(response);
+          break;
+        }
+
+        case 'estimateGasL1ToL2': {
+          const transaction = this.getNodeParameter('transaction', i) as any;
+          
+          const requestBody = {
+            jsonrpc: '2.0',
+            method: 'zks_estimateGasL1ToL2',
+            params: [transaction],
+            id: Date.now(),
+          };
+
+          const options: any = {
+            method: 'POST',
+            url: credentials.baseUrl,
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(requestBody),
+            json: false,
+          };
+          
+          const response = await this.helpers.httpRequest(options) as any;
+          result = JSON.parse(response);
+          break;
+        }
+
+        case 'call': {
+          const transaction = this.getNodeParameter('transaction', i) as any;
+          const blockNumber = this.getNodeParameter('blockNumber', i) as string;
+          
+          const requestBody = {
+            jsonrpc: '2.0',
+            method: 'eth_call',
+            params: [transaction, blockNumber],
+            id: Date.now(),
+          };
+
+          const options: any = {
+            method: 'POST',
+            url: credentials.baseUrl,
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(requestBody),
+            json: false,
+          };
+          
+          const response = await this.helpers.httpRequest(options) as any;
+          result = JSON.parse(response);
+          break;
+        }
+
+        default:
+          throw new NodeOperationError(this.getNode(), `Unknown operation: ${operation}`);
+      }
+
+      if (result.error) {
+        throw new NodeApiError(this.getNode(), result.error, { 
+          message: `zkSync Era API error: ${result.error.message}`,
+          description: result.error.data || 'API request failed'
+        });
+      }
+
+      returnData.push({ 
+        json: result.result || result, 
+        pairedItem: { item: i } 
+      });
+
+    } catch (error: any) {
+      if (this.continueOnFail()) {
+        returnData.push({ 
+          json: { error: error.message }, 
+          pairedItem: { item: i } 
+        });
+      } else {
+        throw error;
+      }
+    }
+  }
+
+  return returnData;
+}
 
 async function executeBlocksOperations(
   this: IExecuteFunctions,
@@ -832,18 +1298,16 @@ async function executeBlocksOperations(
   for (let i = 0; i < items.length; i++) {
     try {
       let result: any;
-
+      
       switch (operation) {
         case 'getBlockByNumber': {
           const blockNumber = this.getNodeParameter('blockNumber', i) as string;
-          const includeTransactions = this.getNodeParameter('includeTransactions', i) as boolean;
-          
-          const formattedBlockNumber = formatBlockNumber(blockNumber);
-          
+          const includeTransactions = this.getNodeParameter('includeTransactions', i, false) as boolean;
+
           const requestBody = {
             jsonrpc: '2.0',
             method: 'eth_getBlockByNumber',
-            params: [formattedBlockNumber, includeTransactions],
+            params: [blockNumber, includeTransactions],
             id: 1,
           };
 
@@ -858,26 +1322,20 @@ async function executeBlocksOperations(
           };
 
           const response = await this.helpers.httpRequest(options) as any;
-          const parsedResponse = JSON.parse(response);
+          const responseData = JSON.parse(response);
           
-          if (parsedResponse.error) {
-            throw new NodeApiError(this.getNode(), parsedResponse.error, {
-              message: `zkSync Era API Error: ${parsedResponse.error.message}`,
-            });
+          if (responseData.error) {
+            throw new NodeApiError(this.getNode(), responseData.error);
           }
           
-          result = parsedResponse.result;
+          result = responseData.result;
           break;
         }
 
         case 'getBlockByHash': {
           const blockHash = this.getNodeParameter('blockHash', i) as string;
-          const includeTransactions = this.getNodeParameter('includeTransactions', i) as boolean;
-          
-          if (!blockHash.startsWith('0x')) {
-            throw new NodeOperationError(this.getNode(), 'Block hash must start with 0x');
-          }
-          
+          const includeTransactions = this.getNodeParameter('includeTransactions', i, false) as boolean;
+
           const requestBody = {
             jsonrpc: '2.0',
             method: 'eth_getBlockByHash',
@@ -896,22 +1354,20 @@ async function executeBlocksOperations(
           };
 
           const response = await this.helpers.httpRequest(options) as any;
-          const parsedResponse = JSON.parse(response);
+          const responseData = JSON.parse(response);
           
-          if (parsedResponse.error) {
-            throw new NodeApiError(this.getNode(), parsedResponse.error, {
-              message: `zkSync Era API Error: ${parsedResponse.error.message}`,
-            });
+          if (responseData.error) {
+            throw new NodeApiError(this.getNode(), responseData.error);
           }
           
-          result = parsedResponse.result;
+          result = responseData.result;
           break;
         }
 
-        case 'getLatestBlockNumber': {
+        case 'getL1BatchNumber': {
           const requestBody = {
             jsonrpc: '2.0',
-            method: 'eth_blockNumber',
+            method: 'zks_getL1BatchNumber',
             params: [],
             id: 1,
           };
@@ -927,29 +1383,23 @@ async function executeBlocksOperations(
           };
 
           const response = await this.helpers.httpRequest(options) as any;
-          const parsedResponse = JSON.parse(response);
+          const responseData = JSON.parse(response);
           
-          if (parsedResponse.error) {
-            throw new NodeApiError(this.getNode(), parsedResponse.error, {
-              message: `zkSync Era API Error: ${parsedResponse.error.message}`,
-            });
+          if (responseData.error) {
+            throw new NodeApiError(this.getNode(), responseData.error);
           }
           
-          result = {
-            blockNumber: parsedResponse.result,
-            blockNumberDecimal: parseInt(parsedResponse.result, 16),
-          };
+          result = responseData.result;
           break;
         }
 
-        case 'getZkSyncBlockDetails': {
-          const blockNumber = this.getNodeParameter('blockNumber', i) as string;
-          const formattedBlockNumber = formatBlockNumber(blockNumber);
-          
+        case 'getL1BatchDetails': {
+          const batchNumber = this.getNodeParameter('batchNumber', i) as string;
+
           const requestBody = {
             jsonrpc: '2.0',
-            method: 'zks_getBlockDetails',
-            params: [formattedBlockNumber],
+            method: 'zks_getL1BatchDetails',
+            params: [batchNumber],
             id: 1,
           };
 
@@ -964,15 +1414,44 @@ async function executeBlocksOperations(
           };
 
           const response = await this.helpers.httpRequest(options) as any;
-          const parsedResponse = JSON.parse(response);
+          const responseData = JSON.parse(response);
           
-          if (parsedResponse.error) {
-            throw new NodeApiError(this.getNode(), parsedResponse.error, {
-              message: `zkSync Era API Error: ${parsedResponse.error.message}`,
-            });
+          if (responseData.error) {
+            throw new NodeApiError(this.getNode(), responseData.error);
           }
           
-          result = parsedResponse.result;
+          result = responseData.result;
+          break;
+        }
+
+        case 'getBlockDetails': {
+          const blockNumber = this.getNodeParameter('blockNumber', i) as string;
+
+          const requestBody = {
+            jsonrpc: '2.0',
+            method: 'zks_getBlockDetails',
+            params: [blockNumber],
+            id: 1,
+          };
+
+          const options: any = {
+            method: 'POST',
+            url: credentials.baseUrl,
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(requestBody),
+            json: false,
+          };
+
+          const response = await this.helpers.httpRequest(options) as any;
+          const responseData = JSON.parse(response);
+          
+          if (responseData.error) {
+            throw new NodeApiError(this.getNode(), responseData.error);
+          }
+          
+          result = responseData.result;
           break;
         }
 
@@ -984,6 +1463,7 @@ async function executeBlocksOperations(
         json: result,
         pairedItem: { item: i },
       });
+
     } catch (error: any) {
       if (this.continueOnFail()) {
         returnData.push({
@@ -999,23 +1479,6 @@ async function executeBlocksOperations(
   return returnData;
 }
 
-function formatBlockNumber(blockNumber: string): string {
-  if (blockNumber === 'latest' || blockNumber === 'earliest' || blockNumber === 'pending') {
-    return blockNumber;
-  }
-  
-  if (blockNumber.startsWith('0x')) {
-    return blockNumber;
-  }
-  
-  const numericValue = parseInt(blockNumber, 10);
-  if (isNaN(numericValue)) {
-    throw new Error('Invalid block number format');
-  }
-  
-  return '0x' + numericValue.toString(16);
-}
-
 // PARSE ERROR for unknown — manual fix needed
 // Raw: // No additional imports
 
@@ -1026,16 +1489,16 @@ function formatBlockNumber(blockNumber: string): string {
   noDataExpression: true,
   displayOptions: {
     show: {
-      resource: ['transactions'],
+      resource: ['bridging'],
     },
   },
   options: [
     {
-      name: 'Send Raw Transaction',
-      value: 'sendRawTransaction',
-      desc
+      name: 'Get L2 to L1 Log Proof',
+      value: 'getL2ToL1LogProof',
+      descrip
 
-async function executeAccountsOperations(
+async function executePaymastersOperations(
   this: IExecuteFunctions,
   items: INodeExecutionData[],
 ): Promise<INodeExecutionData[]> {
@@ -1046,129 +1509,288 @@ async function executeAccountsOperations(
   for (let i = 0; i < items.length; i++) {
     try {
       let result: any;
-      const address = this.getNodeParameter('address', i) as string;
-      const blockTag = this.getNodeParameter('blockTag', i, 'latest') as string;
-
-      const baseOptions = {
-        method: 'POST',
-        url: credentials.baseUrl,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        json: true,
-      };
 
       switch (operation) {
-        case 'getEthBalance': {
-          const options: any = {
-            ...baseOptions,
-            body: {
-              jsonrpc: '2.0',
-              method: 'eth_getBalance',
-              params: [address, blockTag],
-              id: 1,
-            },
-          };
-          result = await this.helpers.httpRequest(options) as any;
-          if (result.error) {
-            throw new NodeApiError(this.getNode(), result, { 
-              message: result.error.message,
-              httpCode: '400'
-            });
+        case 'estimateFee': {
+          const transaction = this.getNodeParameter('transaction', i) as any;
+          const paymasterAddress = this.getNodeParameter('paymasterAddress', i, '') as string;
+          const paymasterInput = this.getNodeParameter('paymasterInput', i, '0x') as string;
+
+          let transactionObj: any;
+          if (typeof transaction === 'string') {
+            transactionObj = JSON.parse(transaction);
+          } else {
+            transactionObj = transaction;
           }
-          result = result.result;
+
+          // Add paymaster data if provided
+          if (paymasterAddress) {
+            transactionObj.paymaster = paymasterAddress;
+            transactionObj.paymasterInput = paymasterInput;
+          }
+
+          const requestBody = {
+            jsonrpc: '2.0',
+            id: 1,
+            method: 'zks_estimateFee',
+            params: [transactionObj],
+          };
+
+          const options: any = {
+            method: 'POST',
+            url: credentials.baseUrl,
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': credentials.apiKey ? `Bearer ${credentials.apiKey}` : undefined,
+            },
+            body: JSON.stringify(requestBody),
+            json: false,
+          };
+
+          const response = await this.helpers.httpRequest(options) as any;
+          const responseData = JSON.parse(response);
+
+          if (responseData.error) {
+            throw new NodeApiError(this.getNode(), responseData.error);
+          }
+
+          result = responseData.result;
           break;
         }
-        case 'getCode': {
-          const options: any = {
-            ...baseOptions,
-            body: {
-              jsonrpc: '2.0',
-              method: 'eth_getCode',
-              params: [address, blockTag],
-              id: 1,
-            },
+
+        case 'sendTransaction': {
+          const signedTransaction = this.getNodeParameter('signedTransaction', i) as string;
+
+          const requestBody = {
+            jsonrpc: '2.0',
+            id: 1,
+            method: 'eth_sendRawTransaction',
+            params: [signedTransaction],
           };
-          result = await this.helpers.httpRequest(options) as any;
-          if (result.error) {
-            throw new NodeApiError(this.getNode(), result, { 
-              message: result.error.message,
-              httpCode: '400'
-            });
+
+          const options: any = {
+            method: 'POST',
+            url: credentials.baseUrl,
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': credentials.apiKey ? `Bearer ${credentials.apiKey}` : undefined,
+            },
+            body: JSON.stringify(requestBody),
+            json: false,
+          };
+
+          const response = await this.helpers.httpRequest(options) as any;
+          const responseData = JSON.parse(response);
+
+          if (responseData.error) {
+            throw new NodeApiError(this.getNode(), responseData.error);
           }
-          result = result.result;
+
+          result = responseData.result;
           break;
         }
-        case 'getStorageAt': {
-          const position = this.getNodeParameter('position', i) as string;
-          const options: any = {
-            ...baseOptions,
-            body: {
-              jsonrpc: '2.0',
-              method: 'eth_getStorageAt',
-              params: [address, position, blockTag],
-              id: 1,
-            },
-          };
-          result = await this.helpers.httpRequest(options) as any;
-          if (result.error) {
-            throw new NodeApiError(this.getNode(), result, { 
-              message: result.error.message,
-              httpCode: '400'
-            });
-          }
-          result = result.result;
-          break;
-        }
-        case 'getTokenBalance': {
+
+        case 'getTokenPrice': {
           const tokenAddress = this.getNodeParameter('tokenAddress', i) as string;
-          const options: any = {
-            ...baseOptions,
-            body: {
-              jsonrpc: '2.0',
-              method: 'zks_getBalance',
-              params: [address, blockTag, tokenAddress],
-              id: 1,
-            },
+
+          const requestBody = {
+            jsonrpc: '2.0',
+            id: 1,
+            method: 'zks_getTokenPrice',
+            params: [tokenAddress],
           };
-          result = await this.helpers.httpRequest(options) as any;
-          if (result.error) {
-            throw new NodeApiError(this.getNode(), result, { 
-              message: result.error.message,
-              httpCode: '400'
-            });
+
+          const options: any = {
+            method: 'POST',
+            url: credentials.baseUrl,
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': credentials.apiKey ? `Bearer ${credentials.apiKey}` : undefined,
+            },
+            body: JSON.stringify(requestBody),
+            json: false,
+          };
+
+          const response = await this.helpers.httpRequest(options) as any;
+          const responseData = JSON.parse(response);
+
+          if (responseData.error) {
+            throw new NodeApiError(this.getNode(), responseData.error);
           }
-          result = result.result;
+
+          result = responseData.result;
           break;
         }
+
         default:
           throw new NodeOperationError(this.getNode(), `Unknown operation: ${operation}`);
       }
 
-      returnData.push({ 
-        json: { 
-          address,
-          blockTag,
-          operation,
-          result
-        }, 
-        pairedItem: { item: i } 
+      returnData.push({
+        json: result,
+        pairedItem: { item: i },
       });
+
     } catch (error: any) {
       if (this.continueOnFail()) {
-        returnData.push({ 
-          json: { 
-            error: error.message,
-            address: this.getNodeParameter('address', i, '') as string,
-            operation
-          }, 
-          pairedItem: { item: i } 
+        returnData.push({
+          json: { error: error.message },
+          pairedItem: { item: i },
         });
       } else {
         throw error;
       }
     }
   }
+
+  return returnData;
+}
+
+async function executeProofsOperations(
+  this: IExecuteFunctions,
+  items: INodeExecutionData[],
+): Promise<INodeExecutionData[]> {
+  const returnData: INodeExecutionData[] = [];
+  const operation = this.getNodeParameter('operation', 0) as string;
+  const credentials = await this.getCredentials('zksynceraApi') as any;
+
+  for (let i = 0; i < items.length; i++) {
+    try {
+      let result: any;
+
+      switch (operation) {
+        case 'getProof': {
+          const address = this.getNodeParameter('address', i) as string;
+          const keysParam = this.getNodeParameter('keys', i) as string;
+          const l1BatchNumber = this.getNodeParameter('l1BatchNumber', i) as string;
+
+          // Parse keys from comma-separated string
+          const keys = keysParam.split(',').map((key: string) => key.trim());
+
+          const requestBody = {
+            jsonrpc: '2.0',
+            method: 'zks_getProof',
+            params: [address, keys, l1BatchNumber],
+            id: 1,
+          };
+
+          const options: any = {
+            method: 'POST',
+            url: credentials.baseUrl || 'https://mainnet.era.zksync.io',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(requestBody),
+            json: false,
+          };
+
+          if (credentials.apiKey) {
+            options.headers['Authorization'] = `Bearer ${credentials.apiKey}`;
+          }
+
+          const response = await this.helpers.httpRequest(options) as any;
+          const responseData = JSON.parse(response);
+          
+          if (responseData.error) {
+            throw new NodeApiError(this.getNode(), responseData.error);
+          }
+
+          result = responseData.result;
+          break;
+        }
+
+        case 'getL1BatchDetails': {
+          const batchNumber = this.getNodeParameter('batchNumber', i) as number;
+
+          const requestBody = {
+            jsonrpc: '2.0',
+            method: 'zks_getL1BatchDetails',
+            params: [batchNumber],
+            id: 1,
+          };
+
+          const options: any = {
+            method: 'POST',
+            url: credentials.baseUrl || 'https://mainnet.era.zksync.io',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(requestBody),
+            json: false,
+          };
+
+          if (credentials.apiKey) {
+            options.headers['Authorization'] = `Bearer ${credentials.apiKey}`;
+          }
+
+          const response = await this.helpers.httpRequest(options) as any;
+          const responseData = JSON.parse(response);
+          
+          if (responseData.error) {
+            throw new NodeApiError(this.getNode(), responseData.error);
+          }
+
+          result = responseData.result;
+          break;
+        }
+
+        case 'getL2ToL1LogProof': {
+          const txHash = this.getNodeParameter('txHash', i) as string;
+          const logIndex = this.getNodeParameter('logIndex', i, 0) as number;
+
+          const requestBody = {
+            jsonrpc: '2.0',
+            method: 'zks_getL2ToL1LogProof',
+            params: [txHash, logIndex],
+            id: 1,
+          };
+
+          const options: any = {
+            method: 'POST',
+            url: credentials.baseUrl || 'https://mainnet.era.zksync.io',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(requestBody),
+            json: false,
+          };
+
+          if (credentials.apiKey) {
+            options.headers['Authorization'] = `Bearer ${credentials.apiKey}`;
+          }
+
+          const response = await this.helpers.httpRequest(options) as any;
+          const responseData = JSON.parse(response);
+          
+          if (responseData.error) {
+            throw new NodeApiError(this.getNode(), responseData.error);
+          }
+
+          result = responseData.result;
+          break;
+        }
+
+        default:
+          throw new NodeOperationError(this.getNode(), `Unknown operation: ${operation}`);
+      }
+
+      returnData.push({
+        json: result,
+        pairedItem: { item: i },
+      });
+
+    } catch (error: any) {
+      if (this.continueOnFail()) {
+        returnData.push({
+          json: { error: error.message },
+          pairedItem: { item: i },
+        });
+      } else {
+        throw error;
+      }
+    }
+  }
+
   return returnData;
 }
 
@@ -1185,30 +1807,15 @@ async function executeContractsOperations(
       let result: any;
       
       switch (operation) {
-        case 'ethCall': {
-          const to = this.getNodeParameter('to', i) as string;
-          const data = this.getNodeParameter('data', i) as string;
-          const from = this.getNodeParameter('from', i) as string;
-          const value = this.getNodeParameter('value', i) as string;
-          const gas = this.getNodeParameter('gas', i) as string;
-          const gasPrice = this.getNodeParameter('gasPrice', i) as string;
-          const blockTag = this.getNodeParameter('blockTag', i) as string;
-
-          const transaction: any = {
-            to,
-            data,
-          };
-
-          if (from) transaction.from = from;
-          if (value) transaction.value = value;
-          if (gas) transaction.gas = gas;
-          if (gasPrice) transaction.gasPrice = gasPrice;
-
+        case 'callFunction': {
+          const transaction = this.getNodeParameter('transaction', i) as any;
+          const blockNumber = this.getNodeParameter('blockNumber', i, 'latest') as string;
+          
           const requestBody = {
             jsonrpc: '2.0',
             method: 'eth_call',
-            params: [transaction, blockTag],
-            id: i + 1,
+            params: [transaction, blockNumber],
+            id: Date.now(),
           };
 
           const options: any = {
@@ -1216,47 +1823,23 @@ async function executeContractsOperations(
             url: credentials.baseUrl,
             headers: {
               'Content-Type': 'application/json',
-              'Authorization': credentials.apiKey ? `Bearer ${credentials.apiKey}` : undefined,
             },
             body: requestBody,
             json: true,
           };
 
           result = await this.helpers.httpRequest(options) as any;
-          
-          if (result.error) {
-            throw new NodeApiError(this.getNode(), result.error, {
-              message: `RPC Error: ${result.error.message}`,
-            });
-          }
-
-          result = result.result;
           break;
         }
 
-        case 'estimateGas': {
-          const to = this.getNodeParameter('to', i) as string;
-          const data = this.getNodeParameter('data', i) as string;
-          const from = this.getNodeParameter('from', i) as string;
-          const value = this.getNodeParameter('value', i) as string;
-          const gas = this.getNodeParameter('gas', i) as string;
-          const gasPrice = this.getNodeParameter('gasPrice', i) as string;
-
-          const transaction: any = {
-            to,
-            data,
-          };
-
-          if (from) transaction.from = from;
-          if (value) transaction.value = value;
-          if (gas) transaction.gas = gas;
-          if (gasPrice) transaction.gasPrice = gasPrice;
-
+        case 'getDetails': {
+          const contractAddress = this.getNodeParameter('contractAddress', i) as string;
+          
           const requestBody = {
             jsonrpc: '2.0',
-            method: 'eth_estimateGas',
-            params: [transaction],
-            id: i + 1,
+            method: 'zks_getContractDetails',
+            params: [contractAddress],
+            id: Date.now(),
           };
 
           const options: any = {
@@ -1264,47 +1847,24 @@ async function executeContractsOperations(
             url: credentials.baseUrl,
             headers: {
               'Content-Type': 'application/json',
-              'Authorization': credentials.apiKey ? `Bearer ${credentials.apiKey}` : undefined,
             },
             body: requestBody,
             json: true,
           };
 
           result = await this.helpers.httpRequest(options) as any;
-          
-          if (result.error) {
-            throw new NodeApiError(this.getNode(), result.error, {
-              message: `RPC Error: ${result.error.message}`,
-            });
-          }
-
-          result = result.result;
           break;
         }
 
-        case 'estimateFee': {
-          const to = this.getNodeParameter('to', i) as string;
-          const data = this.getNodeParameter('data', i) as string;
-          const from = this.getNodeParameter('from', i) as string;
-          const value = this.getNodeParameter('value', i) as string;
-          const gas = this.getNodeParameter('gas', i) as string;
-          const gasPrice = this.getNodeParameter('gasPrice', i) as string;
-
-          const transaction: any = {
-            to,
-            data,
-          };
-
-          if (from) transaction.from = from;
-          if (value) transaction.value = value;
-          if (gas) transaction.gas = gas;
-          if (gasPrice) transaction.gasPrice = gasPrice;
-
+        case 'getCode': {
+          const address = this.getNodeParameter('address', i) as string;
+          const blockNumber = this.getNodeParameter('blockNumber', i, 'latest') as string;
+          
           const requestBody = {
             jsonrpc: '2.0',
-            method: 'zks_estimateFee',
-            params: [transaction],
-            id: i + 1,
+            method: 'eth_getCode',
+            params: [address, blockNumber],
+            id: Date.now(),
           };
 
           const options: any = {
@@ -1312,539 +1872,12 @@ async function executeContractsOperations(
             url: credentials.baseUrl,
             headers: {
               'Content-Type': 'application/json',
-              'Authorization': credentials.apiKey ? `Bearer ${credentials.apiKey}` : undefined,
             },
             body: requestBody,
             json: true,
           };
 
           result = await this.helpers.httpRequest(options) as any;
-          
-          if (result.error) {
-            throw new NodeApiError(this.getNode(), result.error, {
-              message: `RPC Error: ${result.error.message}`,
-            });
-          }
-
-          result = result.result;
-          break;
-        }
-
-        case 'getAllAccountBalances': {
-          const address = this.getNodeParameter('address', i) as string;
-
-          const requestBody = {
-            jsonrpc: '2.0',
-            method: 'zks_getAllAccountBalances',
-            params: [address],
-            id: i + 1,
-          };
-
-          const options: any = {
-            method: 'POST',
-            url: credentials.baseUrl,
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': credentials.apiKey ? `Bearer ${credentials.apiKey}` : undefined,
-            },
-            body: requestBody,
-            json: true,
-          };
-
-          result = await this.helpers.httpRequest(options) as any;
-          
-          if (result.error) {
-            throw new NodeApiError(this.getNode(), result.error, {
-              message: `RPC Error: ${result.error.message}`,
-            });
-          }
-
-          result = result.result;
-          break;
-        }
-
-        default:
-          throw new NodeOperationError(this.getNode(), `Unknown operation: ${operation}`, {
-            itemIndex: i,
-          });
-      }
-
-      returnData.push({
-        json: result,
-        pairedItem: {
-          item: i,
-        },
-      });
-    } catch (error: any) {
-      if (this.continueOnFail()) {
-        returnData.push({
-          json: {
-            error: error.message,
-          },
-          pairedItem: {
-            item: i,
-          },
-        });
-        continue;
-      }
-      throw error;
-    }
-  }
-
-  return returnData;
-}
-
-async function executeLogsOperations(
-  this: IExecuteFunctions,
-  items: INodeExecutionData[],
-): Promise<INodeExecutionData[]> {
-  const returnData: INodeExecutionData[] = [];
-  const operation = this.getNodeParameter('operation', 0) as string;
-  const credentials = await this.getCredentials('zksynceraApi') as any;
-
-  for (let i = 0; i < items.length; i++) {
-    try {
-      let result: any;
-      
-      switch (operation) {
-        case 'getLogs': {
-          const fromBlock = this.getNodeParameter('fromBlock', i) as string;
-          const toBlock = this.getNodeParameter('toBlock', i) as string;
-          const address = this.getNodeParameter('address', i) as string;
-          const topics = this.getNodeParameter('topics', i) as string;
-          const blockHash = this.getNodeParameter('blockHash', i) as string;
-
-          const filterObject: any = {};
-          
-          if (blockHash) {
-            filterObject.blockHash = blockHash;
-          } else {
-            filterObject.fromBlock = fromBlock;
-            filterObject.toBlock = toBlock;
-          }
-
-          if (address) {
-            filterObject.address = address;
-          }
-
-          if (topics) {
-            try {
-              filterObject.topics = JSON.parse(topics);
-            } catch (parseError: any) {
-              throw new NodeOperationError(this.getNode(), `Invalid topics JSON: ${parseError.message}`);
-            }
-          }
-
-          const options: any = {
-            method: 'POST',
-            url: credentials.baseUrl,
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: {
-              jsonrpc: '2.0',
-              method: 'eth_getLogs',
-              params: [filterObject],
-              id: 1,
-            },
-            json: true,
-          };
-
-          result = await this.helpers.httpRequest(options) as any;
-          
-          if (result.error) {
-            throw new NodeApiError(this.getNode(), result.error, { httpCode: '400' });
-          }
-          
-          result = result.result;
-          break;
-        }
-
-        case 'createFilter': {
-          const fromBlock = this.getNodeParameter('fromBlock', i) as string;
-          const toBlock = this.getNodeParameter('toBlock', i) as string;
-          const address = this.getNodeParameter('address', i) as string;
-          const topics = this.getNodeParameter('topics', i) as string;
-          const blockHash = this.getNodeParameter('blockHash', i) as string;
-
-          const filterObject: any = {};
-          
-          if (blockHash) {
-            filterObject.blockHash = blockHash;
-          } else {
-            filterObject.fromBlock = fromBlock;
-            filterObject.toBlock = toBlock;
-          }
-
-          if (address) {
-            filterObject.address = address;
-          }
-
-          if (topics) {
-            try {
-              filterObject.topics = JSON.parse(topics);
-            } catch (parseError: any) {
-              throw new NodeOperationError(this.getNode(), `Invalid topics JSON: ${parseError.message}`);
-            }
-          }
-
-          const options: any = {
-            method: 'POST',
-            url: credentials.baseUrl,
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: {
-              jsonrpc: '2.0',
-              method: 'eth_newFilter',
-              params: [filterObject],
-              id: 1,
-            },
-            json: true,
-          };
-
-          result = await this.helpers.httpRequest(options) as any;
-          
-          if (result.error) {
-            throw new NodeApiError(this.getNode(), result.error, { httpCode: '400' });
-          }
-          
-          result = { filterId: result.result };
-          break;
-        }
-
-        case 'getFilterChanges': {
-          const filterId = this.getNodeParameter('filterId', i) as string;
-
-          const options: any = {
-            method: 'POST',
-            url: credentials.baseUrl,
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: {
-              jsonrpc: '2.0',
-              method: 'eth_getFilterChanges',
-              params: [filterId],
-              id: 1,
-            },
-            json: true,
-          };
-
-          result = await this.helpers.httpRequest(options) as any;
-          
-          if (result.error) {
-            throw new NodeApiError(this.getNode(), result.error, { httpCode: '400' });
-          }
-          
-          result = result.result;
-          break;
-        }
-
-        case 'removeFilter': {
-          const filterId = this.getNodeParameter('filterId', i) as string;
-
-          const options: any = {
-            method: 'POST',
-            url: credentials.baseUrl,
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: {
-              jsonrpc: '2.0',
-              method: 'eth_uninstallFilter',
-              params: [filterId],
-              id: 1,
-            },
-            json: true,
-          };
-
-          result = await this.helpers.httpRequest(options) as any;
-          
-          if (result.error) {
-            throw new NodeApiError(this.getNode(), result.error, { httpCode: '400' });
-          }
-          
-          result = { success: result.result, filterId };
-          break;
-        }
-
-        default:
-          throw new NodeOperationError(this.getNode(), `Unknown operation: ${operation}`);
-      }
-
-      returnData.push({ json: result, pairedItem: { item: i } });
-    } catch (error: any) {
-      if (this.continueOnFail()) {
-        returnData.push({ json: { error: error.message }, pairedItem: { item: i } });
-      } else {
-        throw error;
-      }
-    }
-  }
-
-  return returnData;
-}
-
-async function executeNetworkOperations(
-  this: IExecuteFunctions,
-  items: INodeExecutionData[],
-): Promise<INodeExecutionData[]> {
-  const returnData: INodeExecutionData[] = [];
-  const operation = this.getNodeParameter('operation', 0) as string;
-  const credentials = await this.getCredentials('zksynceraApi') as any;
-
-  for (let i = 0; i < items.length; i++) {
-    try {
-      let result: any;
-
-      switch (operation) {
-        case 'getChainId': {
-          const options: any = {
-            method: 'POST',
-            url: credentials.baseUrl,
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              jsonrpc: '2.0',
-              method: 'eth_chainId',
-              params: [],
-              id: 1,
-            }),
-            json: true,
-          };
-          result = await this.helpers.httpRequest(options) as any;
-          break;
-        }
-
-        case 'getGasPrice': {
-          const options: any = {
-            method: 'POST',
-            url: credentials.baseUrl,
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              jsonrpc: '2.0',
-              method: 'eth_gasPrice',
-              params: [],
-              id: 1,
-            }),
-            json: true,
-          };
-          result = await this.helpers.httpRequest(options) as any;
-          break;
-        }
-
-        case 'getNetworkVersion': {
-          const options: any = {
-            method: 'POST',
-            url: credentials.baseUrl,
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              jsonrpc: '2.0',
-              method: 'net_version',
-              params: [],
-              id: 1,
-            }),
-            json: true,
-          };
-          result = await this.helpers.httpRequest(options) as any;
-          break;
-        }
-
-        case 'getMainContract': {
-          const options: any = {
-            method: 'POST',
-            url: credentials.baseUrl,
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              jsonrpc: '2.0',
-              method: 'zks_getMainContract',
-              params: [],
-              id: 1,
-            }),
-            json: true,
-          };
-          result = await this.helpers.httpRequest(options) as any;
-          break;
-        }
-
-        default:
-          throw new NodeOperationError(this.getNode(), `Unknown operation: ${operation}`);
-      }
-
-      if (result.error) {
-        throw new NodeApiError(this.getNode(), result.error, {
-          message: `zkSync Era API Error: ${result.error.message}`,
-        });
-      }
-
-      returnData.push({ 
-        json: {
-          operation,
-          result: result.result,
-          rawResponse: result,
-        }, 
-        pairedItem: { item: i } 
-      });
-
-    } catch (error: any) {
-      if (this.continueOnFail()) {
-        returnData.push({ 
-          json: { 
-            error: error.message,
-            operation,
-          }, 
-          pairedItem: { item: i } 
-        });
-      } else {
-        throw error;
-      }
-    }
-  }
-
-  return returnData;
-}
-
-async function executeBridgingOperations(
-  this: IExecuteFunctions,
-  items: INodeExecutionData[],
-): Promise<INodeExecutionData[]> {
-  const returnData: INodeExecutionData[] = [];
-  const operation = this.getNodeParameter('operation', 0) as string;
-  const credentials = await this.getCredentials('zksynceraApi') as any;
-
-  for (let i = 0; i < items.length; i++) {
-    try {
-      let result: any;
-      let rpcMethod: string;
-      let params: any[] = [];
-
-      switch (operation) {
-        case 'getL1BatchNumber': {
-          rpcMethod = 'zks_getL1BatchNumber';
-          params = [];
-          break;
-        }
-        case 'getL1BatchDetails': {
-          const batchNumber = this.getNodeParameter('batchNumber', i) as string;
-          rpcMethod = 'zks_getL1BatchDetails';
-          params = [batchNumber];
-          break;
-        }
-        case 'getBridgehubContract': {
-          rpcMethod = 'zks_getBridgehubContract';
-          params = [];
-          break;
-        }
-        case 'getBaseTokenL1Address': {
-          rpcMethod = 'zks_getBaseTokenL1Address';
-          params = [];
-          break;
-        }
-        default:
-          throw new NodeOperationError(this.getNode(), `Unknown operation: ${operation}`);
-      }
-
-      const requestBody = {
-        jsonrpc: '2.0',
-        method: rpcMethod,
-        params: params,
-        id: 1,
-      };
-
-      const options: any = {
-        method: 'POST',
-        url: credentials.baseUrl,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(requestBody),
-        json: false,
-      };
-
-      const response = await this.helpers.httpRequest(options) as any;
-      const jsonResponse = JSON.parse(response);
-
-      if (jsonResponse.error) {
-        throw new NodeApiError(this.getNode(), {
-          message: `RPC Error: ${jsonResponse.error.message}`,
-          code: jsonResponse.error.code,
-        });
-      }
-
-      result = {
-        method: rpcMethod,
-        params: params,
-        result: jsonResponse.result,
-        operation: operation,
-      };
-
-      returnData.push({ json: result, pairedItem: { item: i } });
-    } catch (error: any) {
-      if (this.continueOnFail()) {
-        returnData.push({ 
-          json: { error: error.message, operation: operation }, 
-          pairedItem: { item: i } 
-        });
-      } else {
-        throw error;
-      }
-    }
-  }
-  
-  return returnData;
-}
-
-async function executeProofsOperations(
-  this: IExecuteFunctions,
-  items: INodeExecutionData[],
-): Promise<INodeExecutionData[]> {
-  const returnData: INodeExecutionData[] = [];
-  const operation = this.getNodeParameter('operation', 0) as string;
-  const credentials = await this.getCredentials('zksynceraApi') as any;
-
-  for (let i = 0; i < items.length; i++) {
-    try {
-      let result: any;
-      
-      switch (operation) {
-        case 'getProof': {
-          const address = this.getNodeParameter('address', i) as string;
-          const keysParam = this.getNodeParameter('keys', i) as string;
-          const l1BatchNumber = this.getNodeParameter('l1BatchNumber', i) as string;
-          
-          const keys = keysParam.split(',').map((key: string) => key.trim());
-          
-          const requestBody = {
-            jsonrpc: '2.0',
-            method: 'zks_getProof',
-            params: [address, keys, l1BatchNumber],
-            id: 1,
-          };
-
-          const options: any = {
-            method: 'POST',
-            url: credentials.baseUrl,
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(requestBody),
-          };
-
-          result = await this.helpers.httpRequest(options) as any;
-          
-          if (result.error) {
-            throw new NodeApiError(this.getNode(), result.error);
-          }
-          
-          result = result.result;
           break;
         }
 
@@ -1855,6 +1888,74 @@ async function executeProofsOperations(
             jsonrpc: '2.0',
             method: 'zks_getBytecodeByHash',
             params: [bytecodeHash],
+            id: Date.now(),
+          };
+
+          const options: any = {
+            method: 'POST',
+            url: credentials.baseUrl,
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: requestBody,
+            json: true,
+          };
+
+          result = await this.helpers.httpRequest(options) as any;
+          break;
+        }
+
+        default:
+          throw new NodeOperationError(this.getNode(), `Unknown operation: ${operation}`);
+      }
+
+      if (result.error) {
+        throw new NodeApiError(this.getNode(), result, {
+          message: `zkSync Era API Error: ${result.error.message}`,
+          description: result.error.data || 'No additional error details provided',
+        });
+      }
+
+      returnData.push({
+        json: result.result || result,
+        pairedItem: { item: i },
+      });
+
+    } catch (error: any) {
+      if (this.continueOnFail()) {
+        returnData.push({
+          json: { error: error.message },
+          pairedItem: { item: i },
+        });
+      } else {
+        throw error;
+      }
+    }
+  }
+
+  return returnData;
+}
+
+async function executeTokensOperations(
+  this: IExecuteFunctions,
+  items: INodeExecutionData[],
+): Promise<INodeExecutionData[]> {
+  const returnData: INodeExecutionData[] = [];
+  const operation = this.getNodeParameter('operation', 0) as string;
+  const credentials = await this.getCredentials('zksynceraApi') as any;
+
+  for (let i = 0; i < items.length; i++) {
+    try {
+      let result: any;
+      
+      switch (operation) {
+        case 'getAllAccountBalances': {
+          const address = this.getNodeParameter('address', i) as string;
+          
+          const requestBody = {
+            jsonrpc: '2.0',
+            method: 'zks_getAllAccountBalances',
+            params: [address],
             id: 1,
           };
 
@@ -1865,33 +1966,100 @@ async function executeProofsOperations(
               'Content-Type': 'application/json',
             },
             body: JSON.stringify(requestBody),
+            json: false,
           };
 
-          result = await this.helpers.httpRequest(options) as any;
+          const response = await this.helpers.httpRequest(options) as any;
+          const responseData = JSON.parse(response);
           
-          if (result.error) {
-            throw new NodeApiError(this.getNode(), result.error);
+          if (responseData.error) {
+            throw new NodeApiError(this.getNode(), responseData.error);
           }
           
-          result = result.result;
+          result = responseData.result;
           break;
         }
-
-        case 'getL2ToL1MsgProof': {
-          const blockNumber = this.getNodeParameter('blockNumber', i) as string;
-          const sender = this.getNodeParameter('sender', i) as string;
-          const msg = this.getNodeParameter('msg', i) as string;
-          const l2TxNumberInBlock = this.getNodeParameter('l2TxNumberInBlock', i) as string;
+        
+        case 'getTokenPrice': {
+          const tokenAddress = this.getNodeParameter('tokenAddress', i) as string;
           
-          const params = [blockNumber, sender, msg];
-          if (l2TxNumberInBlock) {
-            params.push(l2TxNumberInBlock);
+          const requestBody = {
+            jsonrpc: '2.0',
+            method: 'zks_getTokenPrice',
+            params: [tokenAddress],
+            id: 1,
+          };
+
+          const options: any = {
+            method: 'POST',
+            url: credentials.baseUrl,
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(requestBody),
+            json: false,
+          };
+
+          const response = await this.helpers.httpRequest(options) as any;
+          const responseData = JSON.parse(response);
+          
+          if (responseData.error) {
+            throw new NodeApiError(this.getNode(), responseData.error);
+          }
+          
+          result = responseData.result;
+          break;
+        }
+        
+        case 'getConfirmedTokens': {
+          const from = this.getNodeParameter('from', i, 0) as number;
+          const limit = this.getNodeParameter('limit', i, 100) as number;
+          
+          const requestBody = {
+            jsonrpc: '2.0',
+            method: 'zks_getConfirmedTokens',
+            params: [from, limit],
+            id: 1,
+          };
+
+          const options: any = {
+            method: 'POST',
+            url: credentials.baseUrl,
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(requestBody),
+            json: false,
+          };
+
+          const response = await this.helpers.httpRequest(options) as any;
+          const responseData = JSON.parse(response);
+          
+          if (responseData.error) {
+            throw new NodeApiError(this.getNode(), responseData.error);
+          }
+          
+          result = responseData.result;
+          break;
+        }
+        
+        case 'callTokenContract': {
+          const to = this.getNodeParameter('to', i) as string;
+          const data = this.getNodeParameter('data', i, '') as string;
+          const blockNumber = this.getNodeParameter('blockNumber', i, 'latest') as string;
+          
+          const transaction: any = {
+            to: to,
+          };
+          
+          if (data) {
+            transaction.data = data;
           }
           
           const requestBody = {
             jsonrpc: '2.0',
-            method: 'zks_getL2ToL1MsgProof',
-            params: params,
+            method: 'eth_call',
+            params: [transaction, blockNumber],
             id: 1,
           };
 
@@ -1902,18 +2070,20 @@ async function executeProofsOperations(
               'Content-Type': 'application/json',
             },
             body: JSON.stringify(requestBody),
+            json: false,
           };
 
-          result = await this.helpers.httpRequest(options) as any;
+          const response = await this.helpers.httpRequest(options) as any;
+          const responseData = JSON.parse(response);
           
-          if (result.error) {
-            throw new NodeApiError(this.getNode(), result.error);
+          if (responseData.error) {
+            throw new NodeApiError(this.getNode(), responseData.error);
           }
           
-          result = result.result;
+          result = responseData.result;
           break;
         }
-
+        
         default:
           throw new NodeOperationError(this.getNode(), `Unknown operation: ${operation}`);
       }
@@ -1933,6 +2103,6 @@ async function executeProofsOperations(
       }
     }
   }
-
+  
   return returnData;
 }
