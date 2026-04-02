@@ -1,59 +1,16 @@
-import {
-	ICredentialType,
-	INodeProperties,
-} from 'n8n-workflow';
+import { ICredentialType, INodeProperties } from 'n8n-workflow';
 
 export class zkSyncEraApi implements ICredentialType {
 	name = 'zkSyncEraApi';
 	displayName = 'zkSync Era API';
-	documentationUrl = 'https://era.zksync.io/docs/';
+	documentationUrl = 'https://era.zksync.io/docs/api/';
 	properties: INodeProperties[] = [
 		{
-			displayName: 'Environment',
-			name: 'environment',
-			type: 'options',
-			options: [
-				{
-					name: 'Mainnet',
-					value: 'mainnet',
-				},
-				{
-					name: 'Sepolia Testnet',
-					value: 'testnet',
-				},
-				{
-					name: 'Custom',
-					value: 'custom',
-				},
-			],
-			default: 'mainnet',
-			required: true,
-			description: 'The zkSync Era network environment',
-		},
-		{
-			displayName: 'RPC URL',
-			name: 'rpcUrl',
+			displayName: 'API Endpoint',
+			name: 'apiEndpoint',
 			type: 'string',
 			default: 'https://mainnet.era.zksync.io',
-			required: true,
-			displayOptions: {
-				show: {
-					environment: [
-						'custom',
-					],
-				},
-			},
-			description: 'Custom RPC endpoint URL',
-		},
-		{
-			displayName: 'Private Key',
-			name: 'privateKey',
-			type: 'string',
-			typeOptions: {
-				password: true,
-			},
-			default: '',
-			description: 'Private key for transaction signing (required for write operations)',
+			description: 'The zkSync Era RPC endpoint URL',
 		},
 		{
 			displayName: 'API Key',
@@ -63,14 +20,40 @@ export class zkSyncEraApi implements ICredentialType {
 				password: true,
 			},
 			default: '',
-			description: 'API key for provider services (optional, for rate limiting)',
+			description: 'API key for the RPC provider (if required)',
 		},
 		{
-			displayName: 'Request Timeout',
-			name: 'timeout',
-			type: 'number',
-			default: 30000,
-			description: 'Request timeout in milliseconds',
+			displayName: 'Provider',
+			name: 'provider',
+			type: 'options',
+			options: [
+				{
+					name: 'zkSync Era Mainnet',
+					value: 'mainnet',
+				},
+				{
+					name: 'zkSync Era Testnet',
+					value: 'testnet',
+				},
+				{
+					name: 'Alchemy',
+					value: 'alchemy',
+				},
+				{
+					name: 'QuickNode',
+					value: 'quicknode',
+				},
+				{
+					name: 'Ankr',
+					value: 'ankr',
+				},
+				{
+					name: 'Custom',
+					value: 'custom',
+				},
+			],
+			default: 'mainnet',
+			description: 'The RPC provider to use',
 		},
 	];
 }
