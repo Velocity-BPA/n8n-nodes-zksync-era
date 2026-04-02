@@ -8,25 +8,25 @@
 >
 > For licensing information, visit https://velobpa.com/licensing or contact licensing@velobpa.com.
 
-An n8n community node for interacting with zkSync Era, Ethereum's Layer 2 scaling solution. This node provides comprehensive access to 7 key resources including accounts, transactions, blocks, paymasters, proofs, contracts, and tokens, enabling seamless integration of zkSync Era's zero-knowledge rollup capabilities into your n8n workflows.
+An n8n community node for interacting with zkSync Era, Ethereum's leading Layer 2 scaling solution. This node provides access to 7 comprehensive resources including accounts, transactions, blocks, bridges, paymasters, proofs, and smart contracts, enabling seamless integration with zkSync Era's high-performance blockchain infrastructure.
 
 ![n8n Community Node](https://img.shields.io/badge/n8n-Community%20Node-blue)
 ![License](https://img.shields.io/badge/license-BSL--1.1-blue)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.3-blue)
-![zkSync Era](https://img.shields.io/badge/zkSync-Era-purple)
-![Layer 2](https://img.shields.io/badge/Ethereum-Layer%202-green)
-![Zero Knowledge](https://img.shields.io/badge/ZK-Rollup-orange)
+![zkSync Era](https://img.shields.io/badge/zkSync%20Era-Compatible-purple)
+![Layer 2](https://img.shields.io/badge/Layer%202-Ethereum-green)
+![Smart Contracts](https://img.shields.io/badge/Smart%20Contracts-Enabled-orange)
 
 ## Features
 
-- **Account Management** - Query account balances, nonces, and transaction history across zkSync Era
-- **Transaction Processing** - Submit, track, and analyze Layer 2 transactions with minimal gas fees
-- **Block Operations** - Access block data, confirmations, and chain state information
-- **Paymaster Integration** - Leverage zkSync Era's native account abstraction for gasless transactions
-- **Proof Verification** - Validate zero-knowledge proofs and batch submissions to L1
-- **Smart Contracts** - Deploy and interact with contracts on zkSync Era's EVM-compatible environment
-- **Token Operations** - Manage ERC-20 tokens, bridging, and native zkSync Era token features
-- **Real-time Monitoring** - Track network status, finality, and cross-chain bridge operations
+- **Account Management** - Query account balances, nonces, transaction history, and deploy accounts
+- **Transaction Operations** - Send transactions, check status, estimate fees, and retrieve transaction details
+- **Block Explorer** - Access block information, finalized blocks, and L1 batch details
+- **Bridge Functionality** - Deposit and withdraw assets between Ethereum L1 and zkSync Era L2
+- **Paymaster Integration** - Utilize account abstraction with custom fee payment methods
+- **Proof Verification** - Generate and verify zero-knowledge proofs for transactions and blocks
+- **Smart Contract Interaction** - Deploy, call, and manage smart contracts on zkSync Era
+- **High Performance** - Leverage zkSync Era's fast finality and low transaction costs
 
 ## Installation
 
@@ -61,127 +61,124 @@ n8n start
 
 | Field | Description | Required |
 |-------|-------------|----------|
-| API Key | Your zkSync Era API key for authenticated requests | Yes |
-| Network | Target network (mainnet, testnet, local) | Yes |
-| RPC Endpoint | Custom RPC endpoint URL (optional) | No |
-| Timeout | Request timeout in milliseconds (default: 30000) | No |
+| API Key | Your zkSync Era RPC endpoint API key | Yes |
+| RPC URL | zkSync Era RPC endpoint URL (mainnet/testnet) | Yes |
+| Network | Target network (mainnet, goerli, sepolia) | Yes |
+| Private Key | Wallet private key for transaction signing | No* |
+
+*Required only for operations that involve sending transactions or signing data
 
 ## Resources & Operations
 
-### 1. Accounts
+### 1. Account
 
 | Operation | Description |
 |-----------|-------------|
-| Get Balance | Retrieve account balance for native and ERC-20 tokens |
-| Get Nonce | Get current transaction nonce for an account |
-| Get Transaction Count | Retrieve total transaction count for an account |
-| Get Transaction History | Fetch paginated transaction history |
-| Get Account Info | Get comprehensive account information |
+| Get Balance | Retrieve ETH or token balance for an account |
+| Get Nonce | Get the current nonce for an account |
+| Get Transaction History | Fetch transaction history for an account |
+| Deploy Account | Deploy a new smart contract account |
+| Get Account Info | Retrieve comprehensive account information |
 
-### 2. Transactions
+### 2. Transaction
 
 | Operation | Description |
 |-----------|-------------|
-| Send Transaction | Submit a new transaction to zkSync Era |
+| Send Transaction | Submit a transaction to zkSync Era |
 | Get Transaction | Retrieve transaction details by hash |
-| Get Transaction Receipt | Get transaction receipt and execution status |
 | Get Transaction Status | Check transaction confirmation status |
-| Estimate Fee | Calculate transaction fees before submission |
-| Get Batch Details | Retrieve information about transaction batches |
+| Estimate Fee | Calculate gas fees for a transaction |
+| Get Receipt | Get transaction receipt with logs and events |
+| Wait for Confirmation | Wait for transaction to be confirmed |
 
-### 3. Blocks
+### 3. Block
 
 | Operation | Description |
 |-----------|-------------|
 | Get Block | Retrieve block information by number or hash |
-| Get Latest Block | Get the most recent confirmed block |
-| Get Block Range | Fetch multiple blocks within a specified range |
-| Get Block Transactions | List all transactions in a specific block |
-| Get Finalized Block | Get the latest finalized block on L1 |
+| Get Latest Block | Get the most recent block |
+| Get Finalized Block | Get the latest finalized block |
+| Get Block Range | Fetch multiple blocks within a range |
+| Get L1 Batch | Retrieve L1 batch information |
+| Get Block Details | Get comprehensive block data with transactions |
 
-### 4. Paymasters
-
-| Operation | Description |
-|-----------|-------------|
-| Get Paymaster | Retrieve paymaster contract information |
-| Estimate Paymaster Fee | Calculate fees for paymaster-sponsored transactions |
-| Get Supported Tokens | List tokens accepted by a paymaster |
-| Validate Paymaster | Check paymaster contract validity |
-
-### 5. Proofs
+### 4. Bridge
 
 | Operation | Description |
 |-----------|-------------|
-| Get Proof | Retrieve zero-knowledge proof for a transaction |
-| Verify Proof | Validate proof correctness |
-| Get Batch Proof | Get aggregated proof for transaction batch |
-| Get L1 Batch Status | Check batch submission status on Ethereum L1 |
+| Deposit | Bridge assets from Ethereum L1 to zkSync Era |
+| Withdraw | Bridge assets from zkSync Era to Ethereum L1 |
+| Get Deposit Status | Check status of L1 to L2 deposit |
+| Get Withdrawal Status | Check status of L2 to L1 withdrawal |
+| Estimate Deposit Fee | Calculate fees for depositing assets |
+| Get Bridge History | Retrieve bridge transaction history |
 
-### 6. Contracts
+### 5. Paymaster
 
 | Operation | Description |
 |-----------|-------------|
-| Deploy Contract | Deploy smart contract to zkSync Era |
-| Call Contract | Execute read-only contract function |
-| Send Contract Transaction | Execute state-changing contract function |
-| Get Contract Code | Retrieve deployed contract bytecode |
-| Get Contract ABI | Fetch contract application binary interface |
+| Get Paymaster Balance | Check paymaster account balance |
+| Submit Paymaster Transaction | Send transaction using paymaster |
+| Estimate Paymaster Fee | Calculate fees when using paymaster |
+| Get Paymaster Info | Retrieve paymaster configuration |
+| Validate Paymaster | Check if paymaster can sponsor transaction |
+
+### 6. Proof
+
+| Operation | Description |
+|-----------|-------------|
+| Get Transaction Proof | Generate proof for a specific transaction |
+| Get Block Proof | Generate proof for a block |
+| Verify Proof | Verify a zero-knowledge proof |
+| Get Proof Status | Check proof generation status |
+| Get L1 Proof | Retrieve proof submitted to L1 |
+
+### 7. Contract
+
+| Operation | Description |
+|-----------|-------------|
+| Deploy Contract | Deploy a new smart contract |
+| Call Contract | Execute a read-only contract function |
+| Send Contract Transaction | Execute a state-changing contract function |
+| Get Contract Info | Retrieve contract metadata and ABI |
 | Estimate Contract Gas | Calculate gas for contract interactions |
-
-### 7. Tokens
-
-| Operation | Description |
-|-----------|-------------|
-| Get Token Info | Retrieve token metadata and contract details |
-| Get Token Balance | Check token balance for specific account |
-| Transfer Token | Send ERC-20 tokens between accounts |
-| Get Token Allowance | Check spending allowance between addresses |
-| Get Supported Tokens | List all tokens available on zkSync Era |
-| Bridge Token | Initiate token bridge between L1 and L2 |
+| Get Contract Events | Retrieve events emitted by contract |
 
 ## Usage Examples
 
 ```javascript
-// Get account balance for zkSync Era
+// Get account balance
 {
-  "resource": "accounts",
-  "operation": "getBalance",
   "address": "0x1234567890123456789012345678901234567890",
-  "tokenAddress": "0x0000000000000000000000000000000000000000"
+  "tokenAddress": "0x0000000000000000000000000000000000000000" // ETH
 }
 ```
 
 ```javascript
-// Send a transaction with minimal fees
+// Send a transaction
 {
-  "resource": "transactions",
-  "operation": "sendTransaction",
-  "to": "0x742d35Cc6634C0532925a3b8D53C51678c5F4Ce0",
-  "value": "0.01",
-  "gasLimit": "21000",
-  "maxFeePerGas": "250000000"
+  "to": "0x9876543210987654321098765432109876543210",
+  "value": "0.1", // ETH amount
+  "gasLimit": 21000,
+  "gasPrice": "250000000" // 0.25 Gwei
 }
 ```
 
 ```javascript
-// Deploy smart contract to zkSync Era
+// Deploy a smart contract
 {
-  "resource": "contracts",
-  "operation": "deployContract",
   "bytecode": "0x608060405234801561001057600080fd5b50...",
-  "abi": "[{\"inputs\":[],\"name\":\"constructor\",\"type\":\"constructor\"}]",
-  "constructorArgs": []
+  "constructorArgs": ["Hello", "World"],
+  "gasLimit": 2000000
 }
 ```
 
 ```javascript
-// Use paymaster for gasless transaction
+// Bridge deposit from L1 to L2
 {
-  "resource": "paymasters",
-  "operation": "estimatePaymasterFee",
-  "paymasterAddress": "0x3cb2b87d10ac01736a65688f3e0fb1b070b3eea3",
-  "tokenAddress": "0x5aea5775959fbc2557cc8789bc1bf90a239d9a91",
-  "transactionData": "0x"
+  "l1TokenAddress": "0xA0b86a33E6441c8C06DD2F11c6b6E1E77a6E7E2b",
+  "amount": "100.0",
+  "l2Address": "0x1234567890123456789012345678901234567890"
 }
 ```
 
@@ -189,12 +186,12 @@ n8n start
 
 | Error | Description | Solution |
 |-------|-------------|----------|
-| Invalid API Key | Authentication failed with provided credentials | Verify API key is correct and has necessary permissions |
-| Insufficient Balance | Account lacks sufficient funds for transaction | Check account balance and add funds if needed |
-| Gas Estimation Failed | Unable to calculate transaction gas requirements | Verify contract interaction parameters and network status |
-| Transaction Reverted | Smart contract execution failed | Review contract function parameters and state requirements |
-| Network Timeout | Request exceeded configured timeout limit | Increase timeout value or check network connectivity |
-| Invalid Address | Provided address format is incorrect | Ensure address follows Ethereum address format (0x...) |
+| Invalid API Key | Authentication failed with provided credentials | Verify API key and RPC URL are correct |
+| Insufficient Balance | Account lacks funds for transaction | Check account balance and add funds |
+| Gas Estimation Failed | Unable to estimate transaction gas | Verify contract call parameters and network status |
+| Transaction Reverted | Smart contract execution failed | Check contract state and function parameters |
+| Network Timeout | RPC request timed out | Retry request or check network connectivity |
+| Invalid Address | Provided address format is incorrect | Ensure address is valid zkSync Era format |
 
 ## Development
 
@@ -239,5 +236,5 @@ Contributions are welcome! Please ensure:
 ## Support
 
 - **Issues**: [GitHub Issues](https://github.com/Velocity-BPA/n8n-nodes-zksync-era/issues)
-- **zkSync Era Documentation**: [era.zksync.io/docs](https://era.zksync.io/docs/)
-- **zkSync Era Discord**: [join.zksync.dev](https://join.zksync.dev/)
+- **zkSync Era Documentation**: [era.zksync.io/docs](https://era.zksync.io/docs)
+- **zkSync Era API Reference**: [era.zksync.io/docs/api](https://era.zksync.io/docs/api)
